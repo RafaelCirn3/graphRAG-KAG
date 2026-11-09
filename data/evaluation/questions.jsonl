@@ -1,0 +1,6 @@
+
+
+{"id":"q1","question":"Quais tecnologias aparecem em artigos escritos por autores que publicaram em uma conferência de NLP?","min_hops":3}
+{"id":"q2","question":"Quais áreas de pesquisa estão associadas a artigos escritos por autores afiliados a uma instituição?","min_hops":3}
+{"id":"q3","question":"Quais artigos sobre GraphRAG são citados por trabalhos que também discutem recuperação vetorial?","min_hops":2}
+{"id":"q4","question":"Quais instituições possuem autores que publicaram sobre GraphRAG em conferências de NLP e quais tecnologias aparecem nesses artigos?","min_hops":4}
