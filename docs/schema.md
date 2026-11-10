@@ -1,36 +1,31 @@
 # Schema acadêmico do grafo
 
-Este é o schema mínimo usado para a demonstração e avaliação da atividade. Ele pode ser ajustado ao domínio escolhido, desde que os quatro pilares do Word permaneçam atendidos.
+## Nós implementados
 
-## Nós
-
-| Label | Propriedades principais | Finalidade |
+| Label | Propriedades principais | Uso |
 |---|---|---|
-| `Document` | `id`, `title`, `uri`, `checksum` | Fonte original |
-| `Chunk` | `id`, `text`, `position`, `embedding` | Trecho indexável |
-| `Entity` | `id`, `canonical_name`, `entity_type`, `aliases`, `embedding` | Entidade normalizada |
+| `Document` | `id`, `title`, `uri`, `checksum`, `source`, `year`, `metadata_json` | Documento original |
+| `Chunk` | `id`, `text`, `position`, `document_id`, `embedding` | Trecho indexável |
 | `Paper` | `id`, `title`, `year` | Publicação científica |
-| `Author` | `id`, `name` | Autor |
+| `Author` | `id`, `name`, `canonical_name` | Autor canonicalizado |
 | `Venue` | `id`, `name` | Conferência ou periódico |
 | `Technology` | `id`, `name` | Tecnologia ou tópico |
-| `Institution` | `id`, `name` | Instituição |
-| `ResearchArea` | `id`, `name` | Área de pesquisa |
 
-## Relações
+## Nós previstos para expansão
+
+`Institution`, `ResearchArea` e relações de citação `CITES` ainda dependem de dados dessas propriedades nas fontes escolhidas.
+
+## Relações implementadas
 
 - `(Document)-[:HAS_CHUNK]->(Chunk)`
-- `(Chunk)-[:MENTIONS]->(Entity)`
-- `(Entity)-[:RELATED_TO {relation_type, confidence, source_chunk_id}]->(Entity)`
 - `(Author)-[:WROTE]->(Paper)`
 - `(Paper)-[:PUBLISHED_AT]->(Venue)`
 - `(Paper)-[:USES_TECHNOLOGY]->(Technology)`
-- `(Author)-[:AFFILIATED_WITH]->(Institution)`
-- `(Paper)-[:BELONGS_TO]->(ResearchArea)`
-- `(Paper)-[:CITES]->(Paper)`
 
 ## Regras
 
-- `id` é único em todos os labels.
-- `Document.uri` e `Chunk.text` permitem localizar a origem da evidência.
-- Toda relação extraída deve guardar confiança e o chunk de origem.
-- Embeddings são gerados apenas quando a etapa de recuperação vetorial estiver habilitada.
+- IDs são estáveis e usados em operações `MERGE`.
+- Documentos carregam fonte, URI, checksum e metadados.
+- Chunks carregam texto, posição e embedding de dimensão 384.
+- A extração valida labels, IDs, relações e referências antes da persistência.
+- O índice vetorial usa similaridade de cosseno.

@@ -138,6 +138,3 @@ if st.button("Executar consulta", type="primary"):
             st.code(result["cypher"], language="cypher")
         with st.expander("Evidências e nós encontrados"):
             st.json({"authors": result["authors"], "venues": result["venues"], "technologies": result["technologies"]})
-
-with st.expander("Sobre o demonstrativo"):
-    st.write("A tela demonstra pergunta, resposta, caminho do grafo, Cypher, confiança e evidências. Embeddings, NER/RE e LLM serão conectados nas próximas fases.")

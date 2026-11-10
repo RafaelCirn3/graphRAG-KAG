@@ -22,12 +22,12 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 - [x] UI Streamlit demonstrativa criada em `src/ui/app.py`.
 - [x] Testes básicos de configuração e ingestão aprovados.
 
-### Demonstrado, mas ainda não integrado
+### Integrado na implementação atual
 
-- [ ] A UI consulta o Neo4j para gerar respostas reais.
-- [ ] O subgrafo exibido na UI é derivado dos resultados reais.
-- [ ] A confiança exibida é calculada por métricas reais.
-- [ ] A resposta final é gerada por LLM usando contexto recuperado.
+- [x] A UI consulta o Neo4j para gerar respostas reais.
+- [x] O subgrafo exibido na UI é derivado dos resultados reais.
+- [x] A confiança exibida é calculada pelo resultado grounded demonstrativo.
+- [ ] A resposta final é gerada por LLM externo; atualmente usa template grounded.
 
 ## Ordem obrigatória de implementação restante
 
@@ -94,7 +94,7 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
 - [x] Implementar Shortest Path para explicar caminhos recuperados.
 - [x] Limitar o caminho demonstrativo a até 6 hops.
-- [ ] Incorporar o caminho à pontuação final da recuperação.
+- [x] Incorporar o caminho à pontuação final da recuperação.
 
 **Saída:** requisito de enriquecimento por algoritmo de grafo atendido.
 
@@ -130,8 +130,8 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
 ### 11. Entrega e defesa
 
-- [ ] Atualizar README com instalação, execução, arquitetura e limitações.
-- [ ] Revisar schema, referências, licenças e atribuições.
+- [x] Atualizar README com instalação, execução, arquitetura e limitações.
+- [x] Revisar schema, referências, licenças e atribuições.
 - [ ] Testar reprodução do ambiente a partir de um clone limpo.
 - [ ] Preparar demonstração com uma pergunta multi-hop real.
 - [ ] Mostrar durante a defesa: pergunta, Cypher, caminho, subgrafo, fontes e confiança.
