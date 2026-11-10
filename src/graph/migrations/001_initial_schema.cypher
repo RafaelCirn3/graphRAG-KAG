@@ -8,6 +8,9 @@ FOR (n:Chunk) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT entity_id_unique IF NOT EXISTS
 FOR (n:Entity) REQUIRE n.id IS UNIQUE;
 
+CREATE CONSTRAINT institution_id_unique IF NOT EXISTS
+FOR (n:Institution) REQUIRE n.id IS UNIQUE;
+
 CREATE INDEX document_uri_idx IF NOT EXISTS
 FOR (n:Document) ON (n.uri);
 

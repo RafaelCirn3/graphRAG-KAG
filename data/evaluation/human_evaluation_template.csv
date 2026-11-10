@@ -1,0 +1,13 @@
+question_id,answer_variant,correctness_1_to_5,relevance_1_to_5,completeness_1_to_5,grounding_1_to_5,comments,evaluator
+q1,vector,,,,,,
+q1,hybrid,,,,,,
+q1,no_retrieval,,,,,,
+q2,vector,,,,,,
+q2,hybrid,,,,,,
+q2,no_retrieval,,,,,,
+q3,vector,,,,,,
+q3,hybrid,,,,,,
+q3,no_retrieval,,,,,,
+q4,vector,,,,,,
+q4,hybrid,,,,,,
+q4,no_retrieval,,,,,,

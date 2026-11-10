@@ -47,6 +47,8 @@ Esta é a forma recomendada para a apresentação. O Compose executa automaticam
 7. Avaliação;
 8. Streamlit.
 
+O bootstrap usa o arquivo OpenAlex já existente como cache. Se a API estiver temporariamente limitada (`HTTP 429`), ele tenta novamente e usa a amostra acadêmica local como fallback para não bloquear a demonstração.
+
 Pré-requisitos: Docker Desktop com Compose ativo.
 
 ```bash
@@ -79,7 +81,7 @@ Os dados do Neo4j permanecem no volume Docker `neo4j_data`. Para apagar também 
 
 ## Estado atual
 
-O fluxo implementado é: fonte → documento/chunk → Text-to-Graph → Neo4j → embeddings → recuperação híbrida → pontuação de caminho → resposta grounded → UI → avaliação.
+O fluxo implementado é: fonte → documento/chunk → Text-to-Graph → NER/RE → Neo4j → embeddings → recuperação híbrida → Shortest Path → resposta grounded → UI interativa → avaliação.
 
 As limitações acadêmicas atuais estão registradas em [`docs/evaluation.md`](docs/evaluation.md).
 

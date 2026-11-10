@@ -19,10 +19,12 @@
 
 - Neo4j ativo com constraints, BTREE, full-text e vector online.
 - 20 publicações reais do OpenAlex importadas.
-- 60 chunks reais carregados.
-- 158 nós Text-to-Graph processados na amostra OpenAlex.
+- 60 chunks OpenAlex carregados; 62 chunks incluindo a amostra demonstrativa local.
+- 225 nós Text-to-Graph processados após incluir instituições.
+- 30 instituições e 70 relações `AFFILIATED_WITH` encontradas no OpenAlex.
+- 9 entidades, 137 menções e 22 relações `RELATED_TO` extraídas por NER/RE.
 - 4 perguntas avaliadas.
-- 7 testes automatizados aprovados.
+- 8 testes automatizados aprovados.
 
 ## Convenções
 

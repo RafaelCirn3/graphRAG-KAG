@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from src.extraction.entity_resolution import canonical_id, deduplicate_names
+from src.extraction.entity_resolution import canonical_id, deduplicate_names, normalize_name
 
 
 ALLOWED_LABELS = {"Paper", "Author", "Venue", "Technology", "Institution", "ResearchArea"}
@@ -56,6 +56,11 @@ def extract_publication(publication: dict[str, Any]) -> ExtractedGraph:
         author_id = str(author.get("id") or canonical_id("author", author_name))
         nodes.append(_node(author_id, "Author", name=author_name, canonical_name=author_name.lower()))
         relationships.append(GraphRelationship(author_id, "Author", "WROTE", paper_id, "Paper", {}))
+        for institution in author.get("institutions", []):
+            institution_name = str(institution["name"]).strip()
+            institution_id = str(institution.get("id") or canonical_id("institution", institution_name))
+            nodes.append(_node(institution_id, "Institution", name=institution_name, canonical_name=normalize_name(institution_name)))
+            relationships.append(GraphRelationship(author_id, "Author", "AFFILIATED_WITH", institution_id, "Institution", {}))
 
     venue = publication.get("venue")
     if venue:

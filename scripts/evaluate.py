@@ -36,6 +36,11 @@ def main() -> None:
                     "hybrid_scores": [row["hybrid_score"] for row in hybrid],
                     "vector_hit": bool(vector),
                     "hybrid_hit": bool(hybrid),
+                    "no_retrieval_baseline": {
+                        "answer": "Nenhuma evidência consultada.",
+                        "grounded": False,
+                        "sources": [],
+                    },
                 })
     finally:
         driver.close()

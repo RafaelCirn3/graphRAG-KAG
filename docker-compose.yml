@@ -34,7 +34,8 @@ services:
       && python -m scripts.load_sample --input data/raw/openalex_publications.jsonl --source openalex
       && python -m scripts.run_text_to_graph --input data/raw/openalex_publications.jsonl --source openalex
       && python -m scripts.build_embeddings
-      && python -m scripts.evaluate"
+      && python -m scripts.evaluate
+      && python -m scripts.run_ner_re"
     volumes:
       - ./data:/app/data
 

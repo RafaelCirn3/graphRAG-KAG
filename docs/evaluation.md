@@ -9,7 +9,7 @@ As perguntas multi-hop estão em `data/evaluation/questions.jsonl` e os resultad
 1. Recuperação vetorial usando o índice de embeddings.
 2. GraphRAG/KAG híbrido usando vetor, full-text e pontuação de caminho.
 
-A comparação com LLM sem recuperação ainda não foi executada porque não há provedor ou modelo externo configurado.
+A comparação com LLM sem recuperação ainda não foi executada porque não há provedor ou modelo externo configurado. Foi criado um baseline sem recuperação e um formulário em `data/evaluation/human_evaluation_template.csv` para preenchimento pelos avaliadores.
 
 ## Métricas
 

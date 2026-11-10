@@ -1,7 +1,7 @@
 # Arquitetura implementada
 
 ```text
-Fonte acadêmica -> loader/parser/chunker -> extração e canonicalização -> Neo4j
+Fonte acadêmica -> loader/parser/chunker -> NER/RE e canonicalização -> Neo4j
                                                                     |
 Pergunta -> embedding -> busca vetorial + full-text + caminho -> contexto grounded
                                                                     |
@@ -24,10 +24,11 @@ Pergunta -> embedding -> busca vetorial + full-text + caminho -> contexto ground
 1. OpenAlex fornece publicações acadêmicas.
 2. O loader normaliza registros e o parser/chunker cria documentos e chunks.
 3. O Text-to-Graph cria `Paper`, `Author`, `Venue` e `Technology`.
-4. A canonicalização reduz duplicidades de nomes.
-5. Embeddings de 384 dimensões são persistidos em `Chunk`.
-6. A busca híbrida combina vetor, full-text e `path_score`.
-7. A resposta grounded expõe documentos, títulos, confiança e consulta.
-8. A UI mostra o subgrafo real ou a amostra demonstrativa.
+4. O NER/RE cria `Entity`, `MENTIONS` e `RELATED_TO` a partir dos chunks.
+5. A canonicalização reduz duplicidades de nomes.
+6. Embeddings de 384 dimensões são persistidos em `Chunk`.
+7. A busca híbrida combina vetor, full-text e `path_score` baseado em Shortest Path.
+8. A resposta grounded expõe documentos, títulos, confiança, caminhos e Cypher real.
+9. A UI mostra o subgrafo real interativo ou a amostra demonstrativa.
 
 O projeto não usa LLM externo atualmente; a geração final é um template grounded adequado à demonstração acadêmica.

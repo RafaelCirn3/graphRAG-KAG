@@ -6,30 +6,26 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
 ## Estado atual
 
-### Concluído
+- [x] Fases 1 a 10 implementadas em nível demonstrativo acadêmico.
+- [x] Neo4j, ingestão, Text-to-Graph, NER/RE, embeddings e recuperação híbrida executados.
+- [x] UI Streamlit com modos `Dados demonstrativos` e `Dados reais`.
+- [x] Shortest Path, Cypher real, confiança baseada em evidências e grafo interativo integrados.
+- [x] Avaliação vetorial/híbrida e baseline sem recuperação executados.
+- [ ] Avaliação humana preenchida.
+- [ ] Comparação com LLM externo sem recuperação.
 
-- [x] Escopo acadêmico definido conforme o documento Word.
-- [x] Domínio definido: publicações de Ciência da Computação, IA, NLP, Knowledge Graphs, GraphRAG e KAG.
-- [x] Fontes e perguntas multi-hop definidas em `docs/sources-and-questions.md`.
-- [x] Schema inicial documentado em `docs/schema.md`.
-- [x] Estrutura simplificada do repositório criada.
-- [x] Ambiente Python configurado em `pyproject.toml`.
-- [x] Neo4j configurado em `docker-compose.yml` e validado localmente.
-- [x] Constraints e índices BTREE, full-text e vector criados no Neo4j.
-- [x] Loader JSONL, parser e chunker determinístico implementados em `src/ingestion/`.
-- [x] Dataset de exemplo criado em `data/raw/publications.sample.jsonl`.
-- [x] Perguntas de avaliação criadas em `data/evaluation/questions.jsonl`.
-- [x] UI Streamlit demonstrativa criada em `src/ui/app.py`.
-- [x] Testes básicos de configuração e ingestão aprovados.
+## Prioridades concluídas
 
-### Integrado na implementação atual
-
-- [x] A UI consulta o Neo4j para gerar respostas reais.
-- [x] O subgrafo exibido na UI é derivado dos resultados reais.
-- [x] A confiança exibida é calculada pelo resultado grounded demonstrativo.
-- [ ] A resposta final é gerada por LLM externo; atualmente usa template grounded.
-
-## Ordem obrigatória de implementação restante
+- [x] Adicionar instituições e relações `AFFILIATED_WITH` quando disponíveis.
+- [x] Ajustar perguntas para evidências presentes na amostra OpenAlex.
+- [x] Filtrar resultados sem correspondência textual mínima e deduplicar documentos.
+- [x] Integrar Shortest Path ao contexto e ao ranking.
+- [x] Exibir Cypher real na UI.
+- [x] Calcular confiança com vetor, full-text, palavras-chave e caminho.
+- [x] Executar NER/RE sobre chunks.
+- [x] Tornar a visualização do grafo interativa.
+- [x] Criar baseline sem recuperação e template de avaliação humana.
+- [x] Registrar fontes e licenças.
 
 ### 1. Carga dos documentos no Neo4j
 
@@ -47,7 +43,10 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 - [x] Validar a saída com o schema de `docs/schema.md`.
 - [x] Criar testes para entidades e relações extraídas.
 - [x] Persistir o resultado Text-to-Graph no Neo4j.
-- [ ] Adicionar instituições, áreas de pesquisa e citações quando essas informações existirem na fonte real.
+- [x] Adicionar instituições e relações `AFFILIATED_WITH` quando essas informações existirem na fonte real.
+- [x] Executar NER/RE determinístico sobre os chunks e persistir `MENTIONS` e `RELATED_TO`.
+- [x] Validar NER/RE no Neo4j: 9 entidades, 137 menções e 22 relações persistidas.
+- [ ] Adicionar áreas de pesquisa e citações quando essas informações existirem na fonte real.
 
 **Saída:** grafo de conhecimento navegável a partir dos documentos.
 
@@ -124,7 +123,9 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 - [x] Comparar baseline vetorial e recuperação híbrida GraphRAG/KAG.
 - [x] Medir hit operacional, grounding, scores e rastreabilidade.
 - [x] Registrar resultados em `data/evaluation/results.json`.
-- [ ] Comparar também com LLM sem recuperação e avaliação humana de correção/relevância.
+- [x] Criar baseline sem recuperação e planilha-modelo para avaliação humana.
+- [ ] Executar comparação com LLM sem recuperação, caso um modelo/provedor seja configurado.
+- [ ] Preencher avaliação humana de correção, relevância e completude.
 
 **Saída:** evidência objetiva do funcionamento e dos benefícios do grafo.
 

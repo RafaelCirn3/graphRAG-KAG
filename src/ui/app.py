@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from src.config import settings
 from src.generation.grounded import grounded_answer
@@ -61,22 +62,76 @@ def graph_for_documents(driver, document_ids: list[str]) -> str:
     query = """
     MATCH (p:Paper)-[r]-(neighbor)
     WHERE p.id IN $document_ids
-    RETURN p.id AS source, type(r) AS relationship, neighbor.id AS target
+    RETURN p.id AS source_id, labels(p)[0] AS source_type,
+           coalesce(p.title, p.name, p.id) AS source_name,
+           type(r) AS relationship,
+           neighbor.id AS target_id, labels(neighbor)[0] AS target_type,
+           coalesce(neighbor.title, neighbor.name, neighbor.id) AS target_name
     LIMIT 40
     """
     rows = driver.execute_query(query, document_ids=document_ids).records
     lines = ["digraph G {", "rankdir=LR;"]
+    rendered_nodes: set[str] = set()
+    colors = {
+        "Paper": "#DCEBFF",
+        "Author": "#E6F4EA",
+        "Technology": "#FFF4CC",
+        "Venue": "#F3E8FF",
+        "Institution": "#FFE4E6",
+    }
     for row in rows:
-        source = str(row["source"]).replace('"', "'")
-        target = str(row["target"]).replace('"', "'")
+        source = str(row["source_id"]).replace('"', "'")
+        target = str(row["target_id"]).replace('"', "'")
+        source_name = str(row["source_name"]).replace('"', "'").replace("\n", " ")
+        target_name = str(row["target_name"]).replace('"', "'").replace("\n", " ")
+        source_type = str(row["source_type"])
+        target_type = str(row["target_type"])
         relationship = str(row["relationship"]).replace('"', "'")
+        if source not in rendered_nodes:
+            lines.append(f'"{source}" [label="{source_type}: {source_name}", fillcolor="{colors.get(source_type, "#EEEEEE")}"];')
+            rendered_nodes.add(source)
+        if target not in rendered_nodes:
+            lines.append(f'"{target}" [label="{target_type}: {target_name}", fillcolor="{colors.get(target_type, "#EEEEEE")}"];')
+            rendered_nodes.add(target)
         lines.append(f'"{source}" -> "{target}" [label="{relationship}"];')
+    lines.insert(1, "node [shape=box, style=filled, fontname=Arial];")
     lines.append("}")
     return "\n".join(lines)
 
 
+def interactive_graph(driver, document_ids: list[str]) -> None:
+    query = """
+    MATCH (p:Paper)-[r]-(neighbor)
+    WHERE p.id IN $document_ids
+    RETURN p.id AS source_id, coalesce(p.title, p.name, p.id) AS source_name,
+           labels(p)[0] AS source_type, type(r) AS relationship,
+           neighbor.id AS target_id, coalesce(neighbor.title, neighbor.name, neighbor.id) AS target_name,
+           labels(neighbor)[0] AS target_type LIMIT 40
+    """
+    rows = driver.execute_query(query, document_ids=document_ids).records
+    nodes = {}
+    edges = []
+    for row in rows:
+        for node_id, name, node_type in [
+            (row["source_id"], row["source_name"], row["source_type"]),
+            (row["target_id"], row["target_name"], row["target_type"]),
+        ]:
+            nodes[node_id] = {"id": node_id, "label": f"{node_type}: {name}", "group": node_type}
+        edges.append({"from": row["source_id"], "to": row["target_id"], "label": row["relationship"], "arrows": "to"})
+    payload = json.dumps({"nodes": list(nodes.values()), "edges": edges}, ensure_ascii=False)
+    return f"""
+    <div id="graph" style="height:560px;border:1px solid #ddd;border-radius:8px;"></div>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script>
+      const data = {payload};
+      const container = document.getElementById('graph');
+      const options = {{interaction: {{hover: true, navigationButtons: true}}, physics: {{stabilization: true}}, edges: {{smooth: true}}}};
+      new vis.Network(container, {{nodes: new vis.DataSet(data.nodes), edges: new vis.DataSet(data.edges)}}, options);
+    </script>
+    """
+
+
 st.title("🕸️ GraphRAG & KAG")
-st.warning("Demonstração visual acadêmica — não representa um produto de produção.")
 st.caption("Atividade final de Tendências em Ciência da Computação | Busca híbrida e rastreabilidade")
 
 if "data_mode" not in st.session_state:
@@ -104,8 +159,10 @@ if st.button("Executar consulta", type="primary"):
         driver = GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_username, settings.neo4j_password))
         try:
             results = hybrid_search(driver, question, limit=5)
-            result = grounded_answer(question, results, cypher="hybrid_search: vector + fulltext + path_score")
+            executed_cypher = results[0].get("executed_cypher", {}) if results else {}
+            result = grounded_answer(question, results, cypher=json.dumps(executed_cypher, ensure_ascii=False, indent=2))
             graph_dot = graph_for_documents(driver, result["sources"])
+            graph_html = interactive_graph(driver, result["sources"])
         finally:
             driver.close()
         st.subheader("Resposta grounded — dados reais")
@@ -114,12 +171,15 @@ if st.button("Executar consulta", type="primary"):
         st.write(f"**Documentos recuperados:** {len(result['sources'])}")
         st.write("**Pontuação híbrida:** combinação de vetor, full-text e caminho do grafo")
         st.subheader("Subgrafo real recuperado")
-        st.graphviz_chart(graph_dot, use_container_width=True)
+        components.html(graph_html, height=590, scrolling=True)
         with st.expander("Resultados e scores"):
             st.json(results)
         with st.expander("Cypher e evidências"):
             st.code(result["cypher"], language="text")
-            st.json({"sources": result["sources"], "titles": result["evidence_titles"]})
+            st.subheader("Artigos recuperados")
+            for index, title in enumerate(result["evidence_titles"], 1):
+                st.markdown(f"{index}. **{title}**")
+            st.caption("As fontes são mantidas internamente pelos IDs OpenAlex; os títulos são exibidos para leitura humana.")
     else:
         result = build_demo_result(question, records)
         st.subheader("Resposta demonstrativa")

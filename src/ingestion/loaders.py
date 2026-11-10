@@ -27,12 +27,17 @@ def normalize_publication(record: dict[str, Any], source: str = "unknown") -> di
     normalized_authors = []
     for author in authors:
         if isinstance(author, str):
-            normalized_authors.append({"id": author, "name": author})
+            normalized_authors.append({"id": author, "name": author, "institutions": []})
         else:
             nested = author.get("author", {}) if isinstance(author, dict) else {}
+            institutions = author.get("institutions", []) if isinstance(author, dict) else []
             normalized_authors.append({
                 "id": author.get("id") or nested.get("id") or author.get("name"),
                 "name": author.get("name") or nested.get("display_name") or nested.get("name"),
+                "institutions": [
+                    {"id": institution.get("id"), "name": institution.get("display_name") or institution.get("name")}
+                    for institution in institutions if institution.get("id") and (institution.get("display_name") or institution.get("name"))
+                ],
             })
     abstract = record.get("abstract") or record.get("summary") or record.get("description") or ""
     if not abstract and isinstance(record.get("abstract_inverted_index"), dict):
