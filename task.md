@@ -1,54 +1,141 @@
-# Plano de execução — GraphRAG & KAG
+# Plano de conclusão — GraphRAG & KAG
 
-## Fase 0 — Alinhamento e escopo (iniciada)
+Projeto acadêmico para avaliação da disciplina Tendências em Ciência da Computação.
+Responsabilidade compartilhada entre Ewellyn Maria, Gustavo Palmeira, Rafael Cirne,
+Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
-- [x] Formar equipe: Ewellyn Maria, Gustavo Palmeira, Rafael Cirne, Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
-- [x] Definir responsabilidade compartilhada entre todos os integrantes.
-- [x] Escolher domínio, fontes permitidas e perguntas multi-hop em `docs/sources-and-questions.md`.
-- [x] Definir schema inicial em `docs/schema.md`.
-- [x] Adotar os critérios de avaliação definidos no documento Word.
-- [x] Confirmar escopo acadêmico, sem exigência de registro separado de decisões.
+## Estado atual
 
-## Fase 1 — Ambiente e fundação (iniciada)
+### Concluído
 
-- [x] Criar manifesto Python, lint, testes e configuração por `.env`.
-- [x] Criar ambiente Neo4j em `docker-compose.yml`.
-- [x] Implementar migração inicial idempotente com constraints e índices obrigatórios.
-- [x] Criar módulo de configuração e cliente Neo4j.
-- [x] Subir Neo4j e validar conexão local.
-- [x] Definir fontes acadêmicas e perguntas multi-hop iniciais em `docs/sources-and-questions.md`.
-- [x] Criar dados de exemplo em `data/raw/publications.sample.jsonl`.
-- [x] Criar loaders, parser e chunking determinísticos em `src/ingestion/`.
-- [ ] Implementar carga dos documentos processados e metadados no Neo4j.
-- [x] Criar UI Streamlit demonstrativa em `src/ui/app.py` com métricas de rastreabilidade e visualização do subgrafo.
+- [x] Escopo acadêmico definido conforme o documento Word.
+- [x] Domínio definido: publicações de Ciência da Computação, IA, NLP, Knowledge Graphs, GraphRAG e KAG.
+- [x] Fontes e perguntas multi-hop definidas em `docs/sources-and-questions.md`.
+- [x] Schema inicial documentado em `docs/schema.md`.
+- [x] Estrutura simplificada do repositório criada.
+- [x] Ambiente Python configurado em `pyproject.toml`.
+- [x] Neo4j configurado em `docker-compose.yml` e validado localmente.
+- [x] Constraints e índices BTREE, full-text e vector criados no Neo4j.
+- [x] Loader JSONL, parser e chunker determinístico implementados em `src/ingestion/`.
+- [x] Dataset de exemplo criado em `data/raw/publications.sample.jsonl`.
+- [x] Perguntas de avaliação criadas em `data/evaluation/questions.jsonl`.
+- [x] UI Streamlit demonstrativa criada em `src/ui/app.py`.
+- [x] Testes básicos de configuração e ingestão aprovados.
 
-## Fase 2 — Text-to-Graph
+### Demonstrado, mas ainda não integrado
 
-- [ ] Implementar NER e RE com saída estruturada e validação de schema.
-- [ ] Implementar canonicalização/entity resolution e testes de duplicidade.
-- [ ] Carregar documentos, chunks, entidades e relações no Neo4j.
-- [ ] Validar amostras no Browser/Cypher e registrar erros conhecidos.
+- [ ] A UI consulta o Neo4j para gerar respostas reais.
+- [ ] O subgrafo exibido na UI é derivado dos resultados reais.
+- [ ] A confiança exibida é calculada por métricas reais.
+- [ ] A resposta final é gerada por LLM usando contexto recuperado.
 
-## Fase 3 — Recuperação e geração
+## Ordem obrigatória de implementação restante
 
-- [ ] Gerar embeddings e configurar busca vetorial.
-- [ ] Implementar consultas Cypher por entidade, vizinhança e caminhos de 2+ hops.
-- [ ] Implementar fusão/ranking da recuperação híbrida.
-- [ ] Adicionar PageRank, comunidades ou shortest path ao contexto.
-- [ ] Criar prompt de grounding e resposta estruturada com evidências, Cypher e confiança.
+### 1. Carga dos documentos no Neo4j
 
-## Fase 4 — Interface e avaliação
+- [x] Criar o carregador de `Document` e `Chunk` usando o pipeline existente.
+- [x] Persistir `(Document)-[:HAS_CHUNK]->(Chunk)`.
+- [x] Persistir título, resumo, ano, URI, fonte e checksum.
+- [x] Validar a carga com consultas Cypher.
 
-- [ ] Criar UI funcional para pergunta, resposta e métricas de rastreabilidade.
-- [ ] Renderizar o subgrafo retornado com nós e relacionamentos destacados.
-- [ ] Executar testes unitários, integração e fluxo end-to-end.
-- [ ] Comparar baseline, RAG vetorial e GraphRAG/KAG conforme `docs/evaluation.md`.
-- [ ] Corrigir falhas de grounding, latência e duplicidade.
+**Saída:** documentos e chunks disponíveis no Neo4j.
 
-## Fase 5 — Entrega e defesa
+### 2. Text-to-Graph
 
-- [ ] Finalizar README com instalação, execução, arquitetura e limitações.
-- [ ] Atualizar diagramas, referências, evidências e instruções de deployment.
-- [ ] Revisar licenças, atribuições, segredos e reprodutibilidade.
-- [ ] Preparar demonstração: pergunta multi-hop, Cypher, caminho, subgrafo e confiança.
-- [ ] Fazer revisão final do repositório e ensaio da defesa.
+- [x] Extrair artigos, autores, venues e tecnologias a partir dos metadados normalizados.
+- [x] Criar relações `WROTE`, `PUBLISHED_AT` e `USES_TECHNOLOGY`.
+- [x] Validar a saída com o schema de `docs/schema.md`.
+- [x] Criar testes para entidades e relações extraídas.
+- [x] Persistir o resultado Text-to-Graph no Neo4j.
+- [ ] Adicionar instituições, áreas de pesquisa e citações quando essas informações existirem na fonte real.
+
+**Saída:** grafo de conhecimento navegável a partir dos documentos.
+
+### 3. Resolução e canonicalização de entidades
+
+- [ ] Normalizar maiúsculas, acentos, abreviações e aliases.
+- [ ] Gerar IDs estáveis para autores, artigos, instituições e tecnologias.
+- [ ] Evitar duplicidade entre registros de DBLP, OpenAlex e arXiv.
+- [ ] Criar testes para entidades equivalentes.
+
+**Saída:** um único nó por entidade equivalente.
+
+### 4. Dados acadêmicos reais
+
+- [ ] Importar uma amostra controlada de aproximadamente 50–100 artigos.
+- [ ] Priorizar IA, NLP, Knowledge Graphs, GraphRAG e KAG.
+- [ ] Registrar fonte, URI e atribuição de cada conjunto de dados.
+- [ ] Reexecutar a carga e validar a qualidade do grafo.
+
+**Saída:** base suficiente para a demonstração e avaliação.
+
+### 5. Embeddings e busca vetorial
+
+- [ ] Escolher um modelo de embeddings compatível com dimensão 384.
+- [ ] Gerar embeddings para chunks e, se necessário, entidades.
+- [ ] Persistir os vetores no Neo4j.
+- [ ] Testar o índice vetorial com consultas de similaridade.
+
+**Saída:** recuperação semântica funcionando.
+
+### 6. Recuperação híbrida e multi-hop
+
+- [ ] Implementar busca vetorial por pergunta.
+- [ ] Implementar busca full-text e filtros Cypher.
+- [ ] Implementar travessias com pelo menos 2 hops.
+- [ ] Combinar os resultados em um ranking híbrido.
+- [ ] Garantir que cada resultado carregue fontes e evidências.
+
+**Saída:** contexto composto por similaridade semântica e estrutura do grafo.
+
+### 7. Algoritmo de grafo
+
+- [ ] Implementar pelo menos um algoritmo: Shortest Path, PageRank ou Community Detection.
+- [ ] Preferencialmente começar por Shortest Path para explicar os caminhos recuperados.
+- [ ] Incorporar o resultado ao contexto ou à pontuação dos resultados.
+
+**Saída:** requisito de enriquecimento por algoritmo de grafo atendido.
+
+### 8. Geração grounded
+
+- [ ] Criar prompt que aceite apenas contexto recuperado.
+- [ ] Gerar resposta com citações, fontes e caminho do grafo.
+- [ ] Calcular ou estimar confiança com critérios explícitos.
+- [ ] Retornar resposta estruturada com `answer`, `confidence`, `sources`, `nodes`, `relationships` e `cypher`.
+
+**Saída:** resposta rastreável e fundamentada.
+
+### 9. Integração da UI real
+
+- [ ] Substituir a resposta simulada da UI por consulta ao pipeline real.
+- [ ] Exibir a pergunta, resposta, Cypher, fontes, confiança e caminho real.
+- [ ] Renderizar os nós e relacionamentos retornados pelo Neo4j.
+- [ ] Informar quando o sistema estiver usando dados de exemplo ou dados reais.
+
+**Saída:** demonstração visual completa dos quatro pilares.
+
+### 10. Avaliação comparativa
+
+- [ ] Executar as perguntas de `data/evaluation/questions.jsonl`.
+- [ ] Comparar LLM sem recuperação, RAG vetorial e GraphRAG/KAG.
+- [ ] Medir correção, relevância, grounding, multi-hop, latência e rastreabilidade.
+- [ ] Registrar resultados em `docs/evaluation.md`.
+
+**Saída:** evidência objetiva do funcionamento e dos benefícios do grafo.
+
+### 11. Entrega e defesa
+
+- [ ] Atualizar README com instalação, execução, arquitetura e limitações.
+- [ ] Revisar schema, referências, licenças e atribuições.
+- [ ] Testar reprodução do ambiente a partir de um clone limpo.
+- [ ] Preparar demonstração com uma pergunta multi-hop real.
+- [ ] Mostrar durante a defesa: pergunta, Cypher, caminho, subgrafo, fontes e confiança.
+- [ ] Executar revisão final do repositório e ensaio da apresentação.
+
+**Critério de conclusão:** todas as etapas obrigatórias acima marcadas como concluídas,
+com o fluxo funcionando de ponta a ponta:
+
+```text
+Fonte → documento → chunk → entidades/relações → Neo4j
+→ recuperação híbrida → multi-hop → contexto grounded → UI → avaliação
+```
