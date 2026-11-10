@@ -1,0 +1,109 @@
+[
+  {
+    "id": "q1",
+    "min_hops": 3,
+    "vector_documents": [
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W7220695746",
+      "https://openalex.org/W7214552590",
+      "https://openalex.org/W4413985424",
+      "https://openalex.org/W4416379250"
+    ],
+    "hybrid_documents": [
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W7220695746",
+      "https://openalex.org/W7214552590",
+      "https://openalex.org/W4413985424",
+      "https://openalex.org/W4416379250"
+    ],
+    "hybrid_scores": [
+      0.5749,
+      0.5652,
+      0.5536,
+      0.5516,
+      0.5511
+    ],
+    "vector_hit": true,
+    "hybrid_hit": true
+  },
+  {
+    "id": "q2",
+    "min_hops": 3,
+    "vector_documents": [
+      "https://openalex.org/W4413985424",
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W4415482441",
+      "https://openalex.org/W7214552590"
+    ],
+    "hybrid_documents": [
+      "https://openalex.org/W7214552590",
+      "https://openalex.org/W7214552590",
+      "https://openalex.org/W4413985424",
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W4415482441"
+    ],
+    "hybrid_scores": [
+      0.7611,
+      0.759,
+      0.5663,
+      0.5649,
+      0.5631
+    ],
+    "vector_hit": true,
+    "hybrid_hit": true
+  },
+  {
+    "id": "q3",
+    "min_hops": 2,
+    "vector_documents": [
+      "demo:graphrag",
+      "https://openalex.org/W7220695746",
+      "https://openalex.org/W4415482441",
+      "demo:kag",
+      "https://openalex.org/W4415195880"
+    ],
+    "hybrid_documents": [
+      "demo:graphrag",
+      "https://openalex.org/W7220695746",
+      "https://openalex.org/W4415482441",
+      "demo:kag",
+      "https://openalex.org/W4415195880"
+    ],
+    "hybrid_scores": [
+      0.7654,
+      0.5746,
+      0.5562,
+      0.5347,
+      0.5054
+    ],
+    "vector_hit": true,
+    "hybrid_hit": true
+  },
+  {
+    "id": "q4",
+    "min_hops": 4,
+    "vector_documents": [
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W4416379250",
+      "https://openalex.org/W4413985424",
+      "demo:graphrag",
+      "https://openalex.org/W7214552590"
+    ],
+    "hybrid_documents": [
+      "demo:graphrag",
+      "https://openalex.org/W7164915498",
+      "https://openalex.org/W4413985424",
+      "https://openalex.org/W4416379250",
+      "https://openalex.org/W7214552590"
+    ],
+    "hybrid_scores": [
+      0.7382,
+      0.676,
+      0.5864,
+      0.5599,
+      0.5564
+    ],
+    "vector_hit": true,
+    "hybrid_hit": true
+  }
+]

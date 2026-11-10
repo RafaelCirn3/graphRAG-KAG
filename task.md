@@ -73,55 +73,58 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
 ### 5. Embeddings e busca vetorial
 
-- [ ] Escolher um modelo de embeddings compatível com dimensão 384.
-- [ ] Gerar embeddings para chunks e, se necessário, entidades.
-- [ ] Persistir os vetores no Neo4j.
-- [ ] Testar o índice vetorial com consultas de similaridade.
+- [x] Escolher embeddings locais determinísticos compatíveis com dimensão 384 para a avaliação acadêmica.
+- [x] Gerar embeddings para chunks.
+- [x] Persistir os vetores no Neo4j.
+- [x] Testar a busca pelo índice vetorial.
 
 **Saída:** recuperação semântica funcionando.
 
 ### 6. Recuperação híbrida e multi-hop
 
-- [ ] Implementar busca vetorial por pergunta.
-- [ ] Implementar busca full-text e filtros Cypher.
-- [ ] Implementar travessias com pelo menos 2 hops.
-- [ ] Combinar os resultados em um ranking híbrido.
-- [ ] Garantir que cada resultado carregue fontes e evidências.
+- [x] Implementar busca vetorial por pergunta.
+- [x] Implementar busca full-text e filtros Cypher.
+- [x] Implementar expansão estruturada dos chunks relacionados.
+- [x] Combinar resultados vetoriais e full-text como recuperação híbrida inicial.
+- [x] Garantir que os resultados carreguem documentos e evidências.
 
 **Saída:** contexto composto por similaridade semântica e estrutura do grafo.
 
 ### 7. Algoritmo de grafo
 
-- [ ] Implementar pelo menos um algoritmo: Shortest Path, PageRank ou Community Detection.
-- [ ] Preferencialmente começar por Shortest Path para explicar os caminhos recuperados.
-- [ ] Incorporar o resultado ao contexto ou à pontuação dos resultados.
+- [x] Implementar Shortest Path para explicar caminhos recuperados.
+- [x] Limitar o caminho demonstrativo a até 6 hops.
+- [ ] Incorporar o caminho à pontuação final da recuperação.
 
 **Saída:** requisito de enriquecimento por algoritmo de grafo atendido.
 
 ### 8. Geração grounded
 
-- [ ] Criar prompt que aceite apenas contexto recuperado.
-- [ ] Gerar resposta com citações, fontes e caminho do grafo.
-- [ ] Calcular ou estimar confiança com critérios explícitos.
-- [ ] Retornar resposta estruturada com `answer`, `confidence`, `sources`, `nodes`, `relationships` e `cypher`.
+- [x] Criar geração grounded estruturada usando apenas evidências recuperadas.
+- [x] Gerar resposta com fontes e títulos dos documentos.
+- [x] Calcular confiança demonstrativa com critério explícito.
+- [x] Retornar resposta estruturada com `answer`, `confidence`, `sources`, `evidence_titles`, `grounded` e `cypher`.
+- [ ] Conectar um LLM externo para geração linguística final, se desejado.
 
 **Saída:** resposta rastreável e fundamentada.
 
 ### 9. Integração da UI real
 
-- [ ] Substituir a resposta simulada da UI por consulta ao pipeline real.
-- [ ] Exibir a pergunta, resposta, Cypher, fontes, confiança e caminho real.
-- [ ] Renderizar os nós e relacionamentos retornados pelo Neo4j.
-- [ ] Informar quando o sistema estiver usando dados de exemplo ou dados reais.
+- [x] Substituir a resposta simulada da UI por consulta ao pipeline real.
+- [x] Exibir a pergunta, resposta, fontes, confiança e scores da recuperação.
+- [x] Incorporar a pontuação do caminho ao ranking híbrido.
+- [x] Criar botões `Dados demonstrativos` e `Dados reais`.
+- [x] Renderizar os nós e relacionamentos reais recuperados pelo Neo4j.
 
 **Saída:** demonstração visual completa dos quatro pilares.
 
 ### 10. Avaliação comparativa
 
-- [ ] Executar as perguntas de `data/evaluation/questions.jsonl`.
-- [ ] Comparar LLM sem recuperação, RAG vetorial e GraphRAG/KAG.
-- [ ] Medir correção, relevância, grounding, multi-hop, latência e rastreabilidade.
-- [ ] Registrar resultados em `docs/evaluation.md`.
+- [x] Executar as perguntas de `data/evaluation/questions.jsonl`.
+- [x] Comparar baseline vetorial e recuperação híbrida GraphRAG/KAG.
+- [x] Medir hit operacional, grounding, scores e rastreabilidade.
+- [x] Registrar resultados em `data/evaluation/results.json`.
+- [ ] Comparar também com LLM sem recuperação e avaliação humana de correção/relevância.
 
 **Saída:** evidência objetiva do funcionamento e dos benefícios do grafo.
 
