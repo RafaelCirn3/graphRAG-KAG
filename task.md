@@ -53,19 +53,21 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 
 ### 3. Resolução e canonicalização de entidades
 
-- [ ] Normalizar maiúsculas, acentos, abreviações e aliases.
-- [ ] Gerar IDs estáveis para autores, artigos, instituições e tecnologias.
-- [ ] Evitar duplicidade entre registros de DBLP, OpenAlex e arXiv.
-- [ ] Criar testes para entidades equivalentes.
+- [x] Normalizar maiúsculas, acentos, abreviações e aliases.
+- [x] Gerar IDs estáveis para autores, artigos, venues e tecnologias.
+- [x] Evitar duplicidade de nomes equivalentes dentro da mesma publicação.
+- [x] Criar testes para entidades equivalentes.
+- [ ] Unificar entidades entre múltiplas fontes após importar DBLP/arXiv.
 
 **Saída:** um único nó por entidade equivalente.
 
 ### 4. Dados acadêmicos reais
 
-- [ ] Importar uma amostra controlada de aproximadamente 50–100 artigos.
-- [ ] Priorizar IA, NLP, Knowledge Graphs, GraphRAG e KAG.
-- [ ] Registrar fonte, URI e atribuição de cada conjunto de dados.
-- [ ] Reexecutar a carga e validar a qualidade do grafo.
+- [x] Importar uma amostra controlada de 20 artigos do OpenAlex.
+- [x] Priorizar IA, NLP, Knowledge Graphs, GraphRAG e KAG.
+- [x] Registrar fonte, URI e metadados de cada publicação.
+- [x] Reexecutar a carga e validar a qualidade do grafo.
+- [ ] Ampliar para DBLP/arXiv se necessário para aumentar as relações de citação.
 
 **Saída:** base suficiente para a demonstração e avaliação.
 

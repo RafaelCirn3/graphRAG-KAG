@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from src.extraction.entity_resolution import canonical_id, deduplicate_names
+
 
 ALLOWED_LABELS = {"Paper", "Author", "Venue", "Technology", "Institution", "ResearchArea"}
 ALLOWED_RELATIONSHIPS = {
@@ -50,19 +52,23 @@ def extract_publication(publication: dict[str, Any]) -> ExtractedGraph:
     relationships: list[GraphRelationship] = []
 
     for author in publication.get("authors", []):
-        author_id = str(author["id"])
-        nodes.append(_node(author_id, "Author", name=author["name"]))
+        author_name = str(author["name"]).strip()
+        author_id = str(author.get("id") or canonical_id("author", author_name))
+        nodes.append(_node(author_id, "Author", name=author_name, canonical_name=author_name.lower()))
         relationships.append(GraphRelationship(author_id, "Author", "WROTE", paper_id, "Paper", {}))
 
     venue = publication.get("venue")
     if venue:
-        venue_id = f"venue:{str(venue).strip().lower().replace(' ', '-') }"
+        venue_id = canonical_id("venue", str(venue))
         nodes.append(_node(venue_id, "Venue", name=venue))
         relationships.append(GraphRelationship(paper_id, "Paper", "PUBLISHED_AT", venue_id, "Venue", {}))
 
-    for topic in publication.get("topics", []):
-        topic_name = topic.get("display_name", topic) if isinstance(topic, dict) else topic
-        topic_id = f"technology:{str(topic_name).strip().lower().replace(' ', '-') }"
+    topic_names = deduplicate_names([
+        str(topic.get("display_name", topic) if isinstance(topic, dict) else topic)
+        for topic in publication.get("topics", [])
+    ])
+    for topic_name in topic_names:
+        topic_id = canonical_id("technology", topic_name)
         nodes.append(_node(topic_id, "Technology", name=str(topic_name)))
         relationships.append(GraphRelationship(paper_id, "Paper", "USES_TECHNOLOGY", topic_id, "Technology", {}))
 

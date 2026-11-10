@@ -1,5 +1,7 @@
 """Extrai e persiste entidades e relações da amostra acadêmica."""
 
+import argparse
+
 from neo4j import GraphDatabase
 
 from src.config import settings
@@ -9,14 +11,18 @@ from src.ingestion.loaders import load_jsonl, normalize_publication
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", default="data/raw/publications.sample.jsonl")
+    parser.add_argument("--source", default="local")
+    args = parser.parse_args()
     driver = GraphDatabase.driver(
         settings.neo4j_uri,
         auth=(settings.neo4j_username, settings.neo4j_password),
     )
     try:
         total_nodes = total_relationships = 0
-        for record in load_jsonl("data/raw/publications.sample.jsonl"):
-            graph = extract_publication(normalize_publication(record, source="sample"))
+        for record in load_jsonl(args.input):
+            graph = extract_publication(normalize_publication(record, source=args.source))
             errors = validate_graph(graph)
             if errors:
                 raise ValueError("; ".join(errors))

@@ -35,6 +35,9 @@ def normalize_publication(record: dict[str, Any], source: str = "unknown") -> di
                 "name": author.get("name") or nested.get("display_name") or nested.get("name"),
             })
     abstract = record.get("abstract") or record.get("summary") or record.get("description") or ""
+    if not abstract and isinstance(record.get("abstract_inverted_index"), dict):
+        positions = [(position, word) for word, indexes in record["abstract_inverted_index"].items() for position in indexes]
+        abstract = " ".join(word for _, word in sorted(positions))
     return {
         "id": str(record.get("id") or record.get("doi") or record.get("url") or title),
         "title": str(title).strip(),

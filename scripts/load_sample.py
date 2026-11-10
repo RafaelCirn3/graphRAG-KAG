@@ -13,6 +13,7 @@ from src.ingestion.loaders import load_jsonl
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/raw/publications.sample.jsonl")
+    parser.add_argument("--source", default="local")
     args = parser.parse_args()
     driver = GraphDatabase.driver(
         settings.neo4j_uri,
@@ -21,7 +22,7 @@ def main() -> None:
     try:
         driver.verify_connectivity()
         records = load_jsonl(Path(args.input))
-        total = load_publications(driver, records, source="sample")
+        total = load_publications(driver, records, source=args.source)
         print(f"Carga concluída: {total} chunks processados")
     finally:
         driver.close()
