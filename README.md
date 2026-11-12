@@ -4,7 +4,7 @@ Projeto acadêmico de avaliação da disciplina Tendências em Ciência da Compu
 
 ## Equipe
 
-Ewellyn Maria, Gustavo Palmeira, Rafael Cirne, Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
+Ewellyn Maria, Gustavo Palmeira, Rafael Cirne, Julliane Di Paula, Felipe Souto Maior e Arthur Xavier.
 
 A responsabilidade é compartilhada por todos os integrantes. A equipe informada possui seis membros, dentro da faixa de 4 a 6 alunos indicada no documento-base.
 
