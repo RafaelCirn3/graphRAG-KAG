@@ -9,6 +9,7 @@
 - Neo4j Community — banco de dados orientado a grafos: <https://neo4j.com/docs/>
 - Neo4j Python Driver — acesso ao Neo4j: <https://neo4j.com/docs/python-manual/current/>
 - Streamlit — interface visual: <https://docs.streamlit.io/>
+- Ollama — execução local de LLMs (MIT): <https://github.com/ollama/ollama>
 - vis-network — visualização interativa carregada via CDN na UI: <https://visjs.github.io/vis-network/docs/network/>
 
 ## Implementação própria
@@ -18,4 +19,6 @@
 - NER/RE baseado em padrões em `src/extraction/ner_re.py`.
 - Text-to-Graph, recuperação híbrida, Shortest Path e geração grounded desenvolvidos para esta atividade.
 
-Modelos externos e chamadas pagas de LLM não foram utilizados na execução atual. Qualquer adoção futura deve registrar modelo, versão, fornecedor, licença e configuração.
+## Modelos externos
+
+- Qwen2.5 3B (Alibaba, licença Qwen Research) executado localmente via Ollama — geração da resposta final; configurável em `LLM_MODEL`: <https://ollama.com/library/qwen2.5>

@@ -180,9 +180,10 @@ if st.button("Executar consulta", type="primary"):
         from neo4j import GraphDatabase
         driver = GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_username, settings.neo4j_password))
         try:
-            results = hybrid_search(driver, question, limit=5)
-            executed_cypher = results[0].get("executed_cypher", {}) if results else {}
-            result = grounded_answer(question, results, cypher=json.dumps(executed_cypher, ensure_ascii=False, indent=2))
+            with st.spinner("Recuperando evidências e gerando a resposta com o LLM (pode levar ~40 s na CPU)..."):
+                results = hybrid_search(driver, question, limit=5)
+                executed_cypher = results[0].get("executed_cypher", {}) if results else {}
+                result = grounded_answer(question, results, cypher=json.dumps(executed_cypher, ensure_ascii=False, indent=2))
             graph_dot = graph_for_documents(driver, result["sources"])
             graph_html = interactive_graph(driver, result["sources"])
         finally:
@@ -190,6 +191,7 @@ if st.button("Executar consulta", type="primary"):
         st.subheader("Resposta grounded — dados reais")
         st.write(result["answer"])
         st.metric("Confiança", result["confidence"])
+        st.caption(f"Gerado por {settings.llm_model}" if result["llm"] else "Resposta por template (LLM não configurado)")
         st.write(f"**Documentos recuperados:** {len(result['sources'])}")
         st.write("**Pontuação híbrida:** combinação de vetor, full-text e caminho do grafo")
         st.subheader("Subgrafo real recuperado")

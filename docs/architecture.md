@@ -31,4 +31,4 @@ Pergunta -> embedding -> busca vetorial + full-text + caminho -> contexto ground
 8. A resposta grounded expõe documentos, títulos, confiança, caminhos e Cypher real.
 9. A UI mostra o subgrafo real interativo ou a amostra demonstrativa.
 
-O projeto não usa LLM externo atualmente; a geração final é um template grounded adequado à demonstração acadêmica.
+A geração final usa um LLM local e gratuito via Ollama (modelo em `LLM_MODEL`, padrão `qwen2.5:3b`) com as evidências recuperadas como único contexto (`src/generation/grounded.py`). Se o Ollama não estiver acessível em `OLLAMA_URL`, cai no template grounded.

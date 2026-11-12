@@ -103,7 +103,7 @@ Julliane Di Paula, Felipe Souto Mario e Arthur Xavier.
 - [x] Gerar resposta com fontes e títulos dos documentos.
 - [x] Calcular confiança demonstrativa com critério explícito.
 - [x] Retornar resposta estruturada com `answer`, `confidence`, `sources`, `evidence_titles`, `grounded` e `cypher`.
-- [ ] Conectar um LLM externo para geração linguística final, se desejado.
+- [x] Conectar um LLM externo para geração linguística final (Ollama local e gratuito, com fallback para template).
 
 **Saída:** resposta rastreável e fundamentada.
 
