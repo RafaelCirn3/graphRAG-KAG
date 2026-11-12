@@ -25,14 +25,15 @@ Consulte [`docs/architecture.md`](docs/architecture.md), [`docs/schema.md`](docs
 2. Suba o Neo4j com `docker compose up -d`.
 3. Instale as dependências definidas em `pyproject.toml`.
 4. Execute a migração: `python -m scripts.migrate`.
-5. Baixe os dados reais: `python -m scripts.fetch_openalex`.
-6. Carregue documentos/chunks: `python -m scripts.load_sample --input data/raw/openalex_publications.jsonl --source openalex`.
-7. Execute Text-to-Graph: `python -m scripts.run_text_to_graph --input data/raw/openalex_publications.jsonl --source openalex`.
-8. Gere embeddings: `python -m scripts.build_embeddings`.
-9. Rode a avaliação: `python -m scripts.evaluate`.
-10. Inicie a UI: `streamlit run src/ui/app.py --server.port 8501`.
+5. Carregue documentos/chunks: `python -m scripts.load_sample --input data/raw/titles.json`.
+6. Execute Text-to-Graph: `python -m scripts.run_text_to_graph --input data/raw/titles.json`.
+7. Gere embeddings: `python -m scripts.build_embeddings`.
+8. Rode a avaliação: `python -m scripts.evaluate`.
+9. Inicie a UI: `streamlit run src/ui/app.py --server.port 8501`.
 
-Na UI, use os botões **Dados demonstrativos** e **Dados reais** para alternar entre a amostra local e o Neo4j com dados do OpenAlex.
+Os dados ficam em `data/raw/titles.json` (filmes e séries). O formato de cada título está em [`docs/sources-and-questions.md`](docs/sources-and-questions.md). Para adicionar títulos, edite esse arquivo e rode o pipeline de novo.
+
+Na UI, use os botões **Dados demonstrativos** e **Dados reais** para alternar entre o resumo do catálogo local e a consulta no Neo4j.
 
 ## Execução completa via Docker
 
@@ -40,14 +41,12 @@ Esta é a forma recomendada para a apresentação. O Compose executa automaticam
 
 1. Neo4j e healthcheck;
 2. Migrações e índices;
-3. Download de 20 publicações do OpenAlex;
-4. Carga de documentos e chunks;
-5. Text-to-Graph;
-6. Embeddings;
-7. Avaliação;
-8. Streamlit.
+3. Carga de documentos e chunks;
+4. Text-to-Graph;
+5. Embeddings;
+6. Avaliação;
+7. Streamlit.
 
-O bootstrap usa o arquivo OpenAlex já existente como cache. Se a API estiver temporariamente limitada (`HTTP 429`), ele tenta novamente e usa a amostra acadêmica local como fallback para não bloquear a demonstração.
 
 Pré-requisitos: Docker Desktop com Compose ativo.
 

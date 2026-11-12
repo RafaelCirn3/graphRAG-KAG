@@ -20,6 +20,6 @@ A comparação com LLM sem recuperação ainda não foi executada porque não h�
 
 ## Resultado atual
 
-Foram avaliadas 4 perguntas com a amostra OpenAlex. O recall operacional foi de 100% para as estratégias vetorial e híbrida nesta amostra. Esse resultado não representa correção humana.
+As 4 perguntas foram reescritas para o catálogo de filmes e séries; rode `python -m scripts.evaluate` para gerar `data/evaluation/results.json` atualizado. O recall operacional não representa correção humana.
 
 Embeddings: hashing determinístico local, dimensão 384. Geração: resposta grounded por template. Para a entrega final, recomenda-se avaliação humana de correção, relevância e completude.
