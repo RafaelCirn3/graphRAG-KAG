@@ -8,8 +8,20 @@ FOR (n:Chunk) REQUIRE n.id IS UNIQUE;
 CREATE CONSTRAINT entity_id_unique IF NOT EXISTS
 FOR (n:Entity) REQUIRE n.id IS UNIQUE;
 
-CREATE CONSTRAINT institution_id_unique IF NOT EXISTS
-FOR (n:Institution) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT movie_id_unique IF NOT EXISTS
+FOR (n:Movie) REQUIRE n.id IS UNIQUE;
+
+CREATE CONSTRAINT series_id_unique IF NOT EXISTS
+FOR (n:Series) REQUIRE n.id IS UNIQUE;
+
+CREATE CONSTRAINT person_id_unique IF NOT EXISTS
+FOR (n:Person) REQUIRE n.id IS UNIQUE;
+
+CREATE CONSTRAINT genre_id_unique IF NOT EXISTS
+FOR (n:Genre) REQUIRE n.id IS UNIQUE;
+
+CREATE CONSTRAINT studio_id_unique IF NOT EXISTS
+FOR (n:Studio) REQUIRE n.id IS UNIQUE;
 
 CREATE INDEX document_uri_idx IF NOT EXISTS
 FOR (n:Document) ON (n.uri);

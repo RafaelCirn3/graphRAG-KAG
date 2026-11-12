@@ -3,25 +3,25 @@
     "id": "q1",
     "min_hops": 2,
     "vector_documents": [
-      "https://openalex.org/W7164915498",
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4410784978",
-      "https://openalex.org/W4416379250"
+      "movie:john-wick",
+      "series:better-call-saul",
+      "series:dark",
+      "series:stranger-things",
+      "movie:the-matrix"
     ],
     "hybrid_documents": [
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4415195880",
-      "https://openalex.org/W7163050768",
-      "https://openalex.org/W4416754409",
-      "https://openalex.org/W7164496057"
+      "movie:john-wick",
+      "movie:the-matrix",
+      "series:stranger-things",
+      "movie:interstellar",
+      "movie:inception"
     ],
     "hybrid_scores": [
-      0.6359,
-      0.6267,
-      0.6119,
-      0.6047,
-      0.5828
+      0.6824,
+      0.6202,
+      0.4224,
+      0.3826,
+      0.3596
     ],
     "vector_hit": true,
     "hybrid_hit": true,
@@ -35,25 +35,25 @@
     "id": "q2",
     "min_hops": 2,
     "vector_documents": [
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W7164915498",
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4416379250",
-      "https://openalex.org/W4415195880"
+      "movie:the-matrix",
+      "movie:the-dark-knight",
+      "series:stranger-things",
+      "series:breaking-bad",
+      "movie:john-wick"
     ],
     "hybrid_documents": [
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4416379250",
-      "https://openalex.org/W4415195880",
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W7164915498"
+      "movie:the-dark-knight",
+      "movie:the-matrix",
+      "movie:interstellar",
+      "movie:inception",
+      "series:stranger-things"
     ],
     "hybrid_scores": [
-      0.6139,
-      0.5973,
-      0.5925,
-      0.4226,
-      0.4191
+      0.6068,
+      0.5686,
+      0.5627,
+      0.5462,
+      0.4103
     ],
     "vector_hit": true,
     "hybrid_hit": true,
@@ -67,25 +67,25 @@
     "id": "q3",
     "min_hops": 2,
     "vector_documents": [
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4415195880",
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W7164915498",
-      "https://openalex.org/W4415482441"
+      "series:breaking-bad",
+      "movie:the-matrix",
+      "series:better-call-saul",
+      "series:stranger-things",
+      "series:dark"
     ],
     "hybrid_documents": [
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4415195880",
-      "https://openalex.org/W4416379250",
-      "https://openalex.org/W4416754409",
-      "https://openalex.org/W4413985424"
+      "series:breaking-bad",
+      "series:better-call-saul",
+      "movie:the-matrix",
+      "series:stranger-things",
+      "movie:the-dark-knight"
     ],
     "hybrid_scores": [
-      0.5987,
-      0.5846,
-      0.5822,
-      0.5772,
-      0.3973
+      0.6332,
+      0.6195,
+      0.5299,
+      0.3898,
+      0.3613
     ],
     "vector_hit": true,
     "hybrid_hit": true,
@@ -97,27 +97,27 @@
   },
   {
     "id": "q4",
-    "min_hops": 3,
+    "min_hops": 2,
     "vector_documents": [
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4415482441",
-      "https://openalex.org/W7164915498",
-      "https://openalex.org/W7220695746"
+      "series:dark",
+      "series:better-call-saul",
+      "series:stranger-things",
+      "series:breaking-bad",
+      "movie:the-matrix"
     ],
     "hybrid_documents": [
-      "https://openalex.org/W7214552590",
-      "https://openalex.org/W4415195880",
-      "https://openalex.org/W4416754409",
-      "https://openalex.org/W4413985424",
-      "https://openalex.org/W4415482441"
+      "series:dark",
+      "series:stranger-things",
+      "series:breaking-bad",
+      "movie:interstellar",
+      "movie:the-dark-knight"
     ],
     "hybrid_scores": [
-      0.606,
-      0.5902,
-      0.5899,
-      0.4133,
-      0.4038
+      0.6521,
+      0.4383,
+      0.4067,
+      0.4042,
+      0.3451
     ],
     "vector_hit": true,
     "hybrid_hit": true,

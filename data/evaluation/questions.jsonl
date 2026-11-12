@@ -1,4 +1,4 @@
-{"id":"q1","question":"Quais tecnologias aparecem em artigos relacionados a GraphRAG?","min_hops":2,"evidence_terms":["graphrag"]}
-{"id":"q2","question":"Quais autores escreveram artigos relacionados a GraphRAG e quais tecnologias aparecem nesses artigos?","min_hops":2,"evidence_terms":["graphrag"]}
-{"id":"q3","question":"Quais venues publicaram artigos relacionados a GraphRAG e quais tecnologias esses artigos utilizam?","min_hops":2,"evidence_terms":["graphrag"]}
-{"id":"q4","question":"Quais instituições estão associadas a autores de artigos relacionados a GraphRAG?","min_hops":3,"evidence_terms":["graphrag"]}
+{"id":"q1","question":"Em quais filmes Keanu Reeves atuou e quem dirigiu esses filmes?","min_hops":2,"evidence_terms":["keanu reeves"]}
+{"id":"q2","question":"Quais filmes foram dirigidos por Christopher Nolan e quais estúdios os produziram?","min_hops":2,"evidence_terms":["christopher nolan"]}
+{"id":"q3","question":"Quais séries foram criadas por Vince Gilligan e quais atores aparecem nelas?","min_hops":2,"evidence_terms":["vince gilligan"]}
+{"id":"q4","question":"Quais séries da Netflix envolvem viagem no tempo e quem as criou?","min_hops":2,"evidence_terms":["netflix","viagem no tempo"]}

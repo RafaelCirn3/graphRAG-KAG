@@ -30,9 +30,8 @@ services:
         condition: service_healthy
     command: >-
       sh -c "python -m scripts.migrate
-      && python -m scripts.fetch_openalex
-      && python -m scripts.load_sample --input data/raw/openalex_publications.jsonl --source openalex
-      && python -m scripts.run_text_to_graph --input data/raw/openalex_publications.jsonl --source openalex
+      && python -m scripts.load_sample --input data/raw/titles.json
+      && python -m scripts.run_text_to_graph --input data/raw/titles.json
       && python -m scripts.build_embeddings
       && python -m scripts.evaluate
       && python -m scripts.run_ner_re"

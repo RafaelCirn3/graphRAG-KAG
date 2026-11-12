@@ -1,0 +1,110 @@
+[
+  {
+    "id": "movie:the-matrix",
+    "type": "movie",
+    "title": "The Matrix",
+    "year": 1999,
+    "synopsis": "Um hacker descobre que a realidade é uma simulação controlada por máquinas com inteligência artificial e se junta à resistência humana.",
+    "creators": ["Lana Wachowski", "Lilly Wachowski"],
+    "cast": ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"],
+    "genres": ["Ficção científica", "Ação"],
+    "studio": "Warner Bros.",
+    "uri": "https://en.wikipedia.org/wiki/The_Matrix"
+  },
+  {
+    "id": "movie:john-wick",
+    "type": "movie",
+    "title": "John Wick",
+    "year": 2014,
+    "synopsis": "Um ex-assassino de aluguel volta ao submundo do crime organizado em busca de vingança.",
+    "creators": ["Chad Stahelski"],
+    "cast": ["Keanu Reeves", "Ian McShane", "Willem Dafoe"],
+    "genres": ["Ação", "Suspense"],
+    "studio": "Lionsgate",
+    "uri": "https://en.wikipedia.org/wiki/John_Wick_(film)"
+  },
+  {
+    "id": "movie:inception",
+    "type": "movie",
+    "title": "Inception",
+    "year": 2010,
+    "synopsis": "Um ladrão especializado em invadir sonhos recebe a missão de implantar uma ideia na mente de um herdeiro.",
+    "creators": ["Christopher Nolan"],
+    "cast": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page"],
+    "genres": ["Ficção científica", "Ação"],
+    "studio": "Warner Bros.",
+    "uri": "https://en.wikipedia.org/wiki/Inception"
+  },
+  {
+    "id": "movie:interstellar",
+    "type": "movie",
+    "title": "Interstellar",
+    "year": 2014,
+    "synopsis": "Astronautas atravessam um buraco de minhoca em busca de um novo lar para a humanidade e enfrentam a dilatação do tempo perto de um buraco negro.",
+    "creators": ["Christopher Nolan"],
+    "cast": ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
+    "genres": ["Ficção científica", "Drama"],
+    "studio": "Paramount Pictures",
+    "uri": "https://en.wikipedia.org/wiki/Interstellar_(film)"
+  },
+  {
+    "id": "movie:the-dark-knight",
+    "type": "movie",
+    "title": "The Dark Knight",
+    "year": 2008,
+    "synopsis": "Batman enfrenta o Coringa, que se alia ao crime organizado de Gotham e espalha o caos pela cidade.",
+    "creators": ["Christopher Nolan"],
+    "cast": ["Christian Bale", "Heath Ledger"],
+    "genres": ["Ação", "Crime"],
+    "studio": "Warner Bros.",
+    "uri": "https://en.wikipedia.org/wiki/The_Dark_Knight"
+  },
+  {
+    "id": "series:breaking-bad",
+    "type": "series",
+    "title": "Breaking Bad",
+    "year": 2008,
+    "synopsis": "Um professor de química com câncer passa a produzir metanfetamina e entra no tráfico de drogas.",
+    "creators": ["Vince Gilligan"],
+    "cast": ["Bryan Cranston", "Aaron Paul", "Jonathan Banks"],
+    "genres": ["Drama", "Crime"],
+    "studio": "AMC",
+    "uri": "https://en.wikipedia.org/wiki/Breaking_Bad"
+  },
+  {
+    "id": "series:better-call-saul",
+    "type": "series",
+    "title": "Better Call Saul",
+    "year": 2015,
+    "synopsis": "A trajetória do advogado Jimmy McGill até se tornar Saul Goodman, envolvido com o cartel e o tráfico de drogas.",
+    "creators": ["Vince Gilligan", "Peter Gould"],
+    "cast": ["Bob Odenkirk", "Jonathan Banks"],
+    "genres": ["Drama", "Crime"],
+    "studio": "AMC",
+    "uri": "https://en.wikipedia.org/wiki/Better_Call_Saul"
+  },
+  {
+    "id": "series:stranger-things",
+    "type": "series",
+    "title": "Stranger Things",
+    "year": 2016,
+    "synopsis": "Após o desaparecimento de um garoto em Hawkins, amigos e familiares enfrentam experimentos secretos do governo e forças sobrenaturais.",
+    "creators": ["Matt Duffer", "Ross Duffer"],
+    "cast": ["Winona Ryder", "David Harbour", "Millie Bobby Brown"],
+    "genres": ["Ficção científica", "Terror", "Drama"],
+    "studio": "Netflix",
+    "uri": "https://en.wikipedia.org/wiki/Stranger_Things"
+  },
+  {
+    "id": "series:dark",
+    "type": "series",
+    "title": "Dark",
+    "year": 2017,
+    "synopsis": "O desaparecimento de crianças em uma cidade alemã revela uma conspiração de viagem no tempo que conecta quatro famílias ao longo de gerações.",
+    "creators": ["Baran bo Odar", "Jantje Friese"],
+    "cast": ["Louis Hofmann", "Lisa Vicari"],
+    "genres": ["Ficção científica", "Suspense"],
+    "studio": "Netflix",
+    "uri": "https://en.wikipedia.org/wiki/Dark_(TV_series)"
+  }
+]

@@ -1,7 +1,7 @@
 # Arquitetura implementada
 
 ```text
-Fonte acadêmica -> loader/parser/chunker -> NER/RE e canonicalização -> Neo4j
+titles.json    -> loader/parser/chunker -> NER/RE e canonicalização -> Neo4j
                                                                     |
 Pergunta -> embedding -> busca vetorial + full-text + caminho -> contexto grounded
                                                                     |
@@ -16,14 +16,14 @@ Pergunta -> embedding -> busca vetorial + full-text + caminho -> contexto ground
 - `src/retrieval`: embeddings locais, busca vetorial, full-text e ranking híbrido.
 - `src/generation`: resposta grounded estruturada com fontes e confiança.
 - `src/ui`: interface Streamlit com modos demonstrativo e real.
-- `scripts`: migração, coleta OpenAlex, carga, embeddings e avaliação.
+- `scripts`: migração, carga, embeddings e avaliação.
 - `tests`: testes unitários do pipeline.
 
 ## Fluxo real
 
-1. OpenAlex fornece publicações acadêmicas.
+1. `data/raw/titles.json` fornece filmes e séries.
 2. O loader normaliza registros e o parser/chunker cria documentos e chunks.
-3. O Text-to-Graph cria `Paper`, `Author`, `Venue` e `Technology`.
+3. O Text-to-Graph cria `Movie`, `Series`, `Person`, `Genre` e `Studio`.
 4. O NER/RE cria `Entity`, `MENTIONS` e `RELATED_TO` a partir dos chunks.
 5. A canonicalização reduz duplicidades de nomes.
 6. Embeddings de 384 dimensões são persistidos em `Chunk`.

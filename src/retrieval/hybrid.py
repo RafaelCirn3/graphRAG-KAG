@@ -11,7 +11,7 @@ from src.graph.algorithms import shortest_path
 from src.retrieval.embeddings import embed_text
 
 
-STOPWORDS = {"quais", "qual", "que", "com", "para", "sobre", "dos", "das", "uma", "um", "e", "ou", "aparecem", "artigos", "autores", "publicaram"}
+STOPWORDS = {"quais", "qual", "que", "com", "para", "sobre", "dos", "das", "uma", "um", "e", "ou", "em", "quem", "esses", "essas", "nelas", "neles", "aparecem", "filmes", "séries", "títulos", "atores", "atuou", "dirigiu", "dirigidos", "criadas", "criou", "foram"}
 
 
 def _query_terms(question: str) -> set[str]:
@@ -46,7 +46,7 @@ def hybrid_search(driver: Driver, question: str, limit: int = 5) -> list[dict[st
         for item in list(merged_by_document.values()):
             document_id = item["document_id"]
             path_target = session.run(
-                "MATCH (p:Paper {id: $document_id})--(neighbor) RETURN neighbor.id AS id LIMIT 1",
+                "MATCH (p {id: $document_id})--(neighbor) WHERE p:Movie OR p:Series RETURN neighbor.id AS id LIMIT 1",
                 document_id=document_id,
             ).single()
             path = shortest_path(driver, document_id, path_target["id"]) if path_target else {"nodes": [], "relationships": []}

@@ -2,26 +2,40 @@
 
 ## Fonte adotada
 
-- OpenAlex: publicações, autores, instituições, venues, tópicos e identificadores persistentes.
-- A amostra atual contém 20 publicações reais e seus metadados disponíveis.
+- `data/raw/titles.json`: catálogo local de filmes e séries mantido pela equipe.
+- Cada título tem `uri` apontando para a página de referência na Wikipedia, usada como fonte rastreável.
 
-DBLP e arXiv permanecem fontes possíveis para expansão, mas não são necessários para a execução atual.
+### Formato de cada título
+
+```json
+{
+  "id": "movie:the-matrix",
+  "type": "movie",
+  "title": "The Matrix",
+  "year": 1999,
+  "synopsis": "Texto curto usado nos chunks, embeddings e NER.",
+  "creators": ["Lana Wachowski", "Lilly Wachowski"],
+  "cast": ["Keanu Reeves"],
+  "genres": ["Ficção científica"],
+  "studio": "Warner Bros.",
+  "uri": "https://en.wikipedia.org/wiki/The_Matrix"
+}
+```
+
+`type` deve ser `movie` ou `series`. Em filmes, `creators` vira `DIRECTED`; em séries, vira `CREATED`.
 
 ## Perguntas com evidência disponível
 
-As perguntas abaixo foram ajustadas ao grafo atualmente carregado. Todas possuem o termo `GraphRAG`, presente nos títulos ou resumos da amostra, e exigem pelo menos dois relacionamentos:
+1. Em quais filmes Keanu Reeves atuou e quem dirigiu esses filmes?
+2. Quais filmes foram dirigidos por Christopher Nolan e quais estúdios os produziram?
+3. Quais séries foram criadas por Vince Gilligan e quais atores aparecem nelas?
+4. Quais séries da Netflix envolvem viagem no tempo e quem as criou?
 
-1. Quais tecnologias aparecem em artigos relacionados a GraphRAG?
-2. Quais autores escreveram artigos relacionados a GraphRAG e quais tecnologias aparecem nesses artigos?
-3. Quais venues publicaram artigos relacionados a GraphRAG e quais tecnologias esses artigos utilizam?
-4. Quais instituições estão associadas a autores de artigos relacionados a GraphRAG?
-
-Os caminhos esperados incluem combinações como:
+Os caminhos esperados incluem:
 
 ```text
-Author → WROTE → Paper → USES_TECHNOLOGY → Technology
-Author → WROTE → Paper → PUBLISHED_AT → Venue
-Author → AFFILIATED_WITH → Institution
+Person → ACTED_IN → Movie ← DIRECTED ← Person
+Person → DIRECTED → Movie → PRODUCED_BY → Studio
+Person → CREATED → Series ← ACTED_IN ← Person
+Studio ← PRODUCED_BY ← Series ← CREATED ← Person
 ```
-
-Quando a fonte não fornece instituições, a quarta pergunta deve retornar ausência de evidência em vez de inventar uma resposta.

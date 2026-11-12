@@ -1,4 +1,4 @@
-"""Parser de publicações para documentos textuais rastreáveis."""
+"""Parser de filmes/séries para documentos textuais rastreáveis."""
 
 from dataclasses import dataclass
 
@@ -11,16 +11,20 @@ class ParsedDocument:
     metadata: dict
 
 
-def parse_publication(publication: dict) -> ParsedDocument:
-    text_parts = [publication["title"]]
-    if publication.get("abstract"):
-        text_parts.append(publication["abstract"])
-    if publication.get("topics"):
-        topics = [t.get("display_name", t) if isinstance(t, dict) else t for t in publication["topics"]]
-        text_parts.append("Tópicos: " + ", ".join(map(str, topics)))
+def parse_title(item: dict) -> ParsedDocument:
+    kind = "Filme" if item["type"] == "movie" else "Série"
+    creator_label = "Direção" if item["type"] == "movie" else "Criação"
+    text_parts = [f"{item['title']} ({kind}, {item.get('year') or 's/d'})"]
+    if item.get("synopsis"):
+        text_parts.append(item["synopsis"])
+    for label, values in [(creator_label, item.get("creators")), ("Elenco", item.get("cast")), ("Gêneros", item.get("genres"))]:
+        if values:
+            text_parts.append(f"{label}: " + ", ".join(values))
+    if item.get("studio"):
+        text_parts.append(f"Estúdio/canal: {item['studio']}")
     return ParsedDocument(
-        document_id=str(publication["id"]),
-        title=publication["title"],
+        document_id=str(item["id"]),
+        title=item["title"],
         text="\n\n".join(text_parts),
-        metadata={k: v for k, v in publication.items() if k not in {"title", "abstract", "topics"}},
+        metadata={k: v for k, v in item.items() if k not in {"title", "synopsis"}},
     )

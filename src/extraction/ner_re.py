@@ -1,4 +1,4 @@
-"""NER/RE leve e reproduzível para os chunks da demonstração acadêmica."""
+"""NER/RE leve e reproduzível: detecta temas conhecidos nas sinopses."""
 
 from __future__ import annotations
 
@@ -9,8 +9,10 @@ from src.extraction.entity_resolution import canonical_id
 
 
 ENTITY_PATTERNS = {
-    "Technology": ["GraphRAG", "KAG", "Neo4j", "Python", "OpenAlex", "LLM", "LlamaIndex", "LangChain"],
-    "ResearchArea": ["NLP", "Knowledge Graph", "Information Retrieval", "Machine Learning"],
+    "Theme": [
+        "inteligência artificial", "simulação", "crime organizado", "vingança", "sonhos",
+        "buraco negro", "viagem no tempo", "tráfico de drogas", "sobrenatural",
+    ],
 }
 
 

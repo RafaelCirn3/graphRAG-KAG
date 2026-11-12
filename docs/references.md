@@ -2,9 +2,7 @@
 
 ## Dados
 
-- OpenAlex API — metadados acadêmicos usados na amostra real. Consultado pelo script `scripts/fetch_openalex.py`. Verifique os termos atuais de uso e atribuição em <https://docs.openalex.org/>
-- DBLP — fonte planejada para expansão, ainda não usada na execução atual: <https://dblp.org/>
-- arXiv — fonte planejada para expansão de textos públicos, ainda não usada na execução atual: <https://arxiv.org/>
+- `data/raw/titles.json` — catálogo de filmes e séries montado pela equipe. Sinopses escritas pela equipe; diretores, elenco, gêneros e estúdios conferidos nas páginas da Wikipedia indicadas no campo `uri` de cada título (conteúdo CC BY-SA 4.0): <https://en.wikipedia.org/>
 
 ## Software e documentação
 
