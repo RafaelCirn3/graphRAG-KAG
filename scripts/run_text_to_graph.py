@@ -1,18 +1,18 @@
-"""Extrai e persiste entidades e relações da amostra acadêmica."""
+"""Extrai e persiste o grafo de filmes e séries."""
 
 import argparse
 
 from neo4j import GraphDatabase
 
 from src.config import settings
-from src.extraction.text_to_graph import extract_publication, validate_graph
+from src.extraction.text_to_graph import extract_title, validate_graph
 from src.graph.text_to_graph_loader import persist_graph
-from src.ingestion.loaders import load_jsonl, normalize_publication
+from src.ingestion.loaders import load_json, normalize_title
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="data/raw/publications.sample.jsonl")
+    parser.add_argument("--input", default="data/raw/titles.json")
     parser.add_argument("--source", default="local")
     args = parser.parse_args()
     driver = GraphDatabase.driver(
@@ -21,8 +21,8 @@ def main() -> None:
     )
     try:
         total_nodes = total_relationships = 0
-        for record in load_jsonl(args.input):
-            graph = extract_publication(normalize_publication(record, source=args.source))
+        for record in load_json(args.input):
+            graph = extract_title(normalize_title(record, source=args.source))
             errors = validate_graph(graph)
             if errors:
                 raise ValueError("; ".join(errors))

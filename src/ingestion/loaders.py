@@ -1,56 +1,40 @@
-"""Loaders locais para fontes acadêmicas normalizadas."""
+"""Loader do catálogo local de filmes e séries."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
+
+TITLE_TYPES = {"movie", "series"}
 
 
-def load_jsonl(path: str | Path) -> Iterator[dict[str, Any]]:
-    """Lê registros JSONL sem alterar o conteúdo original."""
-    for number, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
-        if not line.strip():
-            continue
-        value = json.loads(line)
-        if not isinstance(value, dict):
-            raise ValueError(f"Linha {number} precisa conter um objeto JSON")
-        yield value
+def load_json(path: str | Path) -> list[dict[str, Any]]:
+    """Lê um arquivo JSON cujo conteúdo é uma lista de títulos."""
+    value = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+        raise ValueError(f"{path} precisa conter uma lista de objetos JSON")
+    return value
 
 
-def normalize_publication(record: dict[str, Any], source: str = "unknown") -> dict[str, Any]:
-    """Converte campos comuns de OpenAlex/DBLP/arXiv para o formato do projeto."""
-    title = record.get("title") or record.get("display_name") or record.get("name")
+def normalize_title(record: dict[str, Any], source: str = "local") -> dict[str, Any]:
+    """Valida um filme/série e devolve o formato usado pelo pipeline."""
+    title = str(record.get("title") or "").strip()
     if not title:
-        raise ValueError("Publicação sem título")
-    authors = record.get("authors") or record.get("authorships") or []
-    normalized_authors = []
-    for author in authors:
-        if isinstance(author, str):
-            normalized_authors.append({"id": author, "name": author, "institutions": []})
-        else:
-            nested = author.get("author", {}) if isinstance(author, dict) else {}
-            institutions = author.get("institutions", []) if isinstance(author, dict) else []
-            normalized_authors.append({
-                "id": author.get("id") or nested.get("id") or author.get("name"),
-                "name": author.get("name") or nested.get("display_name") or nested.get("name"),
-                "institutions": [
-                    {"id": institution.get("id"), "name": institution.get("display_name") or institution.get("name")}
-                    for institution in institutions if institution.get("id") and (institution.get("display_name") or institution.get("name"))
-                ],
-            })
-    abstract = record.get("abstract") or record.get("summary") or record.get("description") or ""
-    if not abstract and isinstance(record.get("abstract_inverted_index"), dict):
-        positions = [(position, word) for word, indexes in record["abstract_inverted_index"].items() for position in indexes]
-        abstract = " ".join(word for _, word in sorted(positions))
+        raise ValueError("Título sem nome")
+    kind = str(record.get("type") or "").lower()
+    if kind not in TITLE_TYPES:
+        raise ValueError(f"{title}: 'type' precisa ser 'movie' ou 'series'")
     return {
-        "id": str(record.get("id") or record.get("doi") or record.get("url") or title),
-        "title": str(title).strip(),
-        "abstract": str(abstract).strip(),
-        "year": record.get("year") or record.get("publication_year"),
+        "id": str(record.get("id") or f"{kind}:{title}"),
+        "type": kind,
+        "title": title,
+        "year": record.get("year"),
+        "synopsis": str(record.get("synopsis") or "").strip(),
+        "creators": [str(name).strip() for name in record.get("creators", []) if str(name).strip()],
+        "cast": [str(name).strip() for name in record.get("cast", []) if str(name).strip()],
+        "genres": [str(name).strip() for name in record.get("genres", []) if str(name).strip()],
+        "studio": str(record.get("studio") or "").strip() or None,
+        "uri": record.get("uri"),
         "source": source,
-        "uri": record.get("uri") or record.get("url") or record.get("doi"),
-        "authors": [a for a in normalized_authors if a.get("id") and a.get("name")],
-        "venue": record.get("venue") or record.get("container_name") or record.get("journal"),
-        "topics": record.get("topics") or record.get("concepts") or [],
     }

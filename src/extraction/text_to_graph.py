@@ -1,4 +1,4 @@
-"""Transformação determinística de publicações acadêmicas em um grafo tipado."""
+"""Transformação determinística de filmes e séries em um grafo tipado."""
 
 from __future__ import annotations
 
@@ -8,15 +8,8 @@ from typing import Any
 from src.extraction.entity_resolution import canonical_id, deduplicate_names, normalize_name
 
 
-ALLOWED_LABELS = {"Paper", "Author", "Venue", "Technology", "Institution", "ResearchArea"}
-ALLOWED_RELATIONSHIPS = {
-    "WROTE",
-    "PUBLISHED_AT",
-    "USES_TECHNOLOGY",
-    "AFFILIATED_WITH",
-    "BELONGS_TO",
-    "CITES",
-}
+ALLOWED_LABELS = {"Movie", "Series", "Person", "Genre", "Studio"}
+ALLOWED_RELATIONSHIPS = {"DIRECTED", "CREATED", "ACTED_IN", "HAS_GENRE", "PRODUCED_BY"}
 
 
 @dataclass(frozen=True)
@@ -46,36 +39,33 @@ def _node(identifier: str, label: str, **properties: Any) -> GraphNode:
     return GraphNode(identifier, label, {"id": identifier, **properties})
 
 
-def extract_publication(publication: dict[str, Any]) -> ExtractedGraph:
-    paper_id = str(publication["id"])
-    nodes = [_node(paper_id, "Paper", title=publication["title"], year=publication.get("year"))]
+def extract_title(item: dict[str, Any]) -> ExtractedGraph:
+    title_id = str(item["id"])
+    title_label = "Movie" if item["type"] == "movie" else "Series"
+    creator_relationship = "DIRECTED" if item["type"] == "movie" else "CREATED"
+    nodes = [_node(title_id, title_label, title=item["title"], year=item.get("year"))]
     relationships: list[GraphRelationship] = []
 
-    for author in publication.get("authors", []):
-        author_name = str(author["name"]).strip()
-        author_id = str(author.get("id") or canonical_id("author", author_name))
-        nodes.append(_node(author_id, "Author", name=author_name, canonical_name=author_name.lower()))
-        relationships.append(GraphRelationship(author_id, "Author", "WROTE", paper_id, "Paper", {}))
-        for institution in author.get("institutions", []):
-            institution_name = str(institution["name"]).strip()
-            institution_id = str(institution.get("id") or canonical_id("institution", institution_name))
-            nodes.append(_node(institution_id, "Institution", name=institution_name, canonical_name=normalize_name(institution_name)))
-            relationships.append(GraphRelationship(author_id, "Author", "AFFILIATED_WITH", institution_id, "Institution", {}))
+    def person(name: str, relationship: str) -> None:
+        person_id = canonical_id("person", name)
+        nodes.append(_node(person_id, "Person", name=name, canonical_name=normalize_name(name)))
+        relationships.append(GraphRelationship(person_id, "Person", relationship, title_id, title_label, {}))
 
-    venue = publication.get("venue")
-    if venue:
-        venue_id = canonical_id("venue", str(venue))
-        nodes.append(_node(venue_id, "Venue", name=venue))
-        relationships.append(GraphRelationship(paper_id, "Paper", "PUBLISHED_AT", venue_id, "Venue", {}))
+    for name in deduplicate_names(item.get("creators", [])):
+        person(name, creator_relationship)
+    for name in deduplicate_names(item.get("cast", [])):
+        person(name, "ACTED_IN")
 
-    topic_names = deduplicate_names([
-        str(topic.get("display_name", topic) if isinstance(topic, dict) else topic)
-        for topic in publication.get("topics", [])
-    ])
-    for topic_name in topic_names:
-        topic_id = canonical_id("technology", topic_name)
-        nodes.append(_node(topic_id, "Technology", name=str(topic_name)))
-        relationships.append(GraphRelationship(paper_id, "Paper", "USES_TECHNOLOGY", topic_id, "Technology", {}))
+    for genre in deduplicate_names(item.get("genres", [])):
+        genre_id = canonical_id("genre", genre)
+        nodes.append(_node(genre_id, "Genre", name=genre))
+        relationships.append(GraphRelationship(title_id, title_label, "HAS_GENRE", genre_id, "Genre", {}))
+
+    studio = item.get("studio")
+    if studio:
+        studio_id = canonical_id("studio", studio)
+        nodes.append(_node(studio_id, "Studio", name=studio))
+        relationships.append(GraphRelationship(title_id, title_label, "PRODUCED_BY", studio_id, "Studio", {}))
 
     return ExtractedGraph(nodes, relationships)
 
