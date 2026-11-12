@@ -76,6 +76,8 @@ Para encerrar os serviços:
 docker compose down
 ```
 
+O compose também sobe o Ollama (LLM local e gratuito). Na primeira execução o serviço `ollama-pull` baixa o modelo `qwen2.5:3b` (~2 GB), acompanhe com `docker compose logs -f ollama-pull`. O modelo fica no volume `ollama_data`; troque-o com `LLM_MODEL=<modelo> docker compose up`.
+
 Os dados do Neo4j permanecem no volume Docker `neo4j_data`. Para apagar também os dados persistidos, use `docker compose down -v`.
 
 ## Estado atual
