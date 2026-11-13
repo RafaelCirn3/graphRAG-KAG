@@ -11,6 +11,30 @@ from src.retrieval.embeddings import embed_text
 from src.retrieval.hybrid import hybrid_search
 
 
+FACT_SCHEMA = {
+    "type": "object",
+    "required": ["facts"],
+    "properties": {"facts": {"type": "array", "items": {
+        "type": "object", "required": ["title", "person"],
+        "properties": {"title": {"type": "string"}, "person": {"type": "string"}}
+    }}}
+}
+
+
+def ask_facts(prompt, question):
+    for attempt in range(2):
+        answer = ask(prompt, question, FACT_SCHEMA)
+        facts = answer.get("facts") if isinstance(answer, dict) else None
+        if isinstance(facts, list) and all(
+            isinstance(fact, dict) and all(isinstance(fact.get(key), str) and fact[key].strip()
+                                           for key in ("title", "person"))
+            for fact in facts
+        ):
+            return answer
+        prompt += ' Each item must be an object with nonempty title and person fields.'
+    raise ValueError("Ollama returned invalid facts twice; evaluation cannot be scored.")
+
+
 def main() -> None:
     questions = [json.loads(line) for line in Path("data/evaluation/questions.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
     driver = GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_username, settings.neo4j_password))
@@ -32,8 +56,8 @@ def main() -> None:
                 prompt = ("Answer the question about this catalog in Portuguese. Return JSON "
                           "with facts, a list of {title,person} pairs. For studios use the "
                           "studio name as person. Include only pairs answering the question.")
-                baseline = ask(prompt, question, True)
-                augmented = ask(prompt, question + "\nEvidence: " + json.dumps(hybrid, ensure_ascii=False), True)
+                baseline = ask_facts(prompt, question)
+                augmented = ask_facts(prompt, question + "\nEvidence: " + json.dumps(hybrid, ensure_ascii=False))
                 catalog = json.loads(Path("data/raw/titles.json").read_text(encoding="utf8"))
                 rules = {"q1": ("cast", "Keanu Reeves", "creators"),
                          "q2": ("creators", "Christopher Nolan", "studio"),
