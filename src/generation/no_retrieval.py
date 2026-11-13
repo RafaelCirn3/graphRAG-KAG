@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 # Prompt deliberadamente neutro: não pede para citar fontes nem para abster-se. É o uso
 # típico de um LLM puro, e é o que o GraphRAG precisa superar.
-SYSTEM_PROMPT = "Você responde perguntas sobre filmes e séries em português, de forma direta."
+SYSTEM_PROMPT = "Você responde perguntas sobre filmes e séries em português, de forma direta. Se faltar informação sobre o catálogo, diga explicitamente."
 
 
 def no_retrieval_answer(question: str, model: str | None = None) -> str | None:
     """Resposta do LLM local (Ollama) sem contexto; None se o serviço estiver indisponível."""
     payload = {
         "model": model or settings.llm_model,
-        "stream": False,
+        "stream": False, "options": {"temperature": 0},
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": question},

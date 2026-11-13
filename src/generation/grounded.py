@@ -23,6 +23,9 @@ def llm_answer(question: str, evidence: list[dict[str, Any]]) -> str | None:
     """Gera a resposta com um LLM local (Ollama); retorna None se ele não estiver disponível."""
     if not evidence:
         return None
+    matched = [item for item in evidence if item.get("path", {}).get("paths")]
+    if matched:
+        evidence = matched
     context = "\n\n".join(
         f"[{item.get('document_id')}] {item.get('title', '')}\n{item.get('text', '')}\n"
         f"Caminho no grafo: {item.get('path') or '—'}"
@@ -30,7 +33,7 @@ def llm_answer(question: str, evidence: list[dict[str, Any]]) -> str | None:
     )
     payload = {
         "model": settings.llm_model,
-        "stream": False,
+        "stream": False, "options": {"temperature": 0},
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {

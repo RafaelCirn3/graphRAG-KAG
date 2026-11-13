@@ -1,0 +1,643 @@
+{
+  "summary": {
+    "hybrid": {
+      "geral": {
+        "n": 17,
+        "acerto": 0.7647,
+        "recall_medio": 0.8654,
+        "alucinacao": 0.1176,
+        "abstencao_correta": 1.0
+      },
+      "1_salto": {
+        "n": 3,
+        "acerto": 0.6667,
+        "recall_medio": 0.8333,
+        "alucinacao": 0.0,
+        "abstencao_correta": null
+      },
+      "2_saltos": {
+        "n": 7,
+        "acerto": 0.8571,
+        "recall_medio": 0.9643,
+        "alucinacao": 0.1429,
+        "abstencao_correta": null
+      },
+      "3_saltos": {
+        "n": 2,
+        "acerto": 0.5,
+        "recall_medio": 0.75,
+        "alucinacao": 0.0,
+        "abstencao_correta": null
+      },
+      "agregacao": {
+        "n": 1,
+        "acerto": 0.0,
+        "recall_medio": 0.5,
+        "alucinacao": 1.0,
+        "abstencao_correta": null
+      },
+      "sem_resposta": {
+        "n": 4,
+        "acerto": 1.0,
+        "recall_medio": null,
+        "alucinacao": 0.0,
+        "abstencao_correta": 1.0
+      }
+    },
+    "no_retrieval": {
+      "geral": {
+        "n": 17,
+        "acerto": 0.1765,
+        "recall_medio": 0.3269,
+        "alucinacao": 0.6471,
+        "abstencao_correta": 0.0
+      },
+      "1_salto": {
+        "n": 3,
+        "acerto": 0.6667,
+        "recall_medio": 0.6667,
+        "alucinacao": 0.3333,
+        "abstencao_correta": null
+      },
+      "2_saltos": {
+        "n": 7,
+        "acerto": 0.1429,
+        "recall_medio": 0.3214,
+        "alucinacao": 0.8571,
+        "abstencao_correta": null
+      },
+      "3_saltos": {
+        "n": 2,
+        "acerto": 0.0,
+        "recall_medio": 0.0,
+        "alucinacao": 0.0,
+        "abstencao_correta": null
+      },
+      "agregacao": {
+        "n": 1,
+        "acerto": 0.0,
+        "recall_medio": 0.0,
+        "alucinacao": 0.0,
+        "abstencao_correta": null
+      },
+      "sem_resposta": {
+        "n": 4,
+        "acerto": 0.0,
+        "recall_medio": null,
+        "alucinacao": 1.0,
+        "abstencao_correta": 0.0
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "category": "2_saltos",
+      "question": "Em quais filmes Keanu Reeves atuou e quem dirigiu esses filmes?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Keanu Reeves atuou em muitos filmes ao longo de sua carreira, e algumas de suas principais participações incluem:\n\n1. \"Point Break\" (1991) - Dirigido por Kathryn Bigelow\n2. \"The Matrix\" (1999) - Dirigido por Larry W. Crook (realizador principal: The Wachowskis)\n3. \"Speed\" (1994) - Dirigido por Wil Wheaton\n4. \"Point Break\" (2017) - Dirigido por Robert Rodriguez\n\nÉ importante notar que algumas de suas participações mais conhecidas e importantes foram dirigidas por outros diretores além dos mencionados. Além disso, sua carreira incluiu muitos outros filmes e séries, mas esses são alguns dos mais notáveis.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.2,
+          "missing_entities": [
+            "Lana Wachowski",
+            "Lilly Wachowski",
+            "Chad Stahelski",
+            "John Wick"
+          ],
+          "unsupported_entities": [
+            "Break",
+            "Kathryn Bigelow",
+            "Larry W",
+            "Wachowskis",
+            "Wil Wheaton",
+            "Robert Rodriguez É"
+          ]
+        },
+        "hybrid": {
+          "answer": "Keanu Reeves atuou nos seguintes filmes:\n\n- [movie:john-wick] - Chad Stahelski dirigiu este filme.\n- [movie:the-matrix] - Lana Wachowski e Lilly Wachowski dirigiram este filme.\n\nPortanto, Keanu Reeves atuou em [movie:john-wick] dirigido por Chad Stahelski e em [movie:the-matrix] dirigido por Lana Wachowski e Lilly Wachowski.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q2",
+      "category": "2_saltos",
+      "question": "Quais filmes foram dirigidos por Christopher Nolan e quais estúdios os produziram?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Christopher Nolan dirigiu vários filmes e eles foram produzidos por estúdios diferentes. Aqui estão alguns exemplos:\n\n- \"Inception\" (2010) - Produzido pela Legendary Pictures\n- \"The Dark Knight\" (2008) - Produzido pela Warner Bros. Pictures\n- \"Interstellar\" (2014) - Produzido pela Legendary Pictures\n- \"Memento\" (2000) - Produzido pela Warner Bros. Pictures\n- \"The Dark Knight Rises\" (2012) - Produzido pela Warner Bros. Pictures\n\nÉ importante notar que a produção de filmes pode mudar ao longo do tempo, e não todos os seus filmes foram produzidos por estúdios diferentes. Além disso, algumas produções podem ter múltiplas produtoras.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.8,
+          "missing_entities": [
+            "Paramount Pictures"
+          ],
+          "unsupported_entities": [
+            "Legendary Pictures",
+            "Dark Knight Rises"
+          ]
+        },
+        "hybrid": {
+          "answer": "Christopher Nolan dirigiu os seguintes filmes e seus estúdios foram:\n\n- The Dark Knight (Warner Bros.)\n- Inception (Warner Bros.)\n- Interstellar (Paramount Pictures)",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q3",
+      "category": "2_saltos",
+      "question": "Quais séries foram criadas por Vince Gilligan e quais atores aparecem nelas?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Vince Gilligan criou séries como \"Breaking Bad\" e \"Better Call Saul\". Na série \"Breaking Bad\", os atores principais são Bryan Cranston (como Walter White) e Aaron Paul (como Jesse Pinkman). Na série \"Better Call Saul\", os atores principais são Bob Odenkirk (como Jimmy McGill/Saul Goodman) e Jonathan Banks (como Howard Hamlin).",
+          "correct": true,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": [
+            "Walter White",
+            "Jesse Pinkman",
+            "Howard Hamlin"
+          ]
+        },
+        "hybrid": {
+          "answer": "Vince Gilligan criou as séries Better Call Saul e Breaking Bad. Os atores que aparecem nessas séries são:\n\n- Better Call Saul: Bob Odenkirk, Jonathan Banks\n- Breaking Bad: Bryan Cranston, Aaron Paul, Jonathan Banks",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q4",
+      "category": "2_saltos",
+      "question": "Quais séries da Netflix envolvem viagem no tempo e quem as criou?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Não há séries da Netflix que envolvem viagem no tempo em seu catálogo atual.",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": 0.0,
+          "missing_entities": [
+            "Dark",
+            "Baran bo Odar",
+            "Jantje Friese"
+          ],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "[series:dark] e [series:stranger-things] são as séries da Netflix que envolvem viagem no tempo. [series:dark] foi criada por Baran bo Odar e Jantje Friese, enquanto [series:stranger-things] foi criada por Matt Duffer e Ross Duffer.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q5",
+      "category": "1_salto",
+      "question": "Quem dirigiu o filme The Matrix?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Quem dirigiu o filme The Matrix foi Lana Wachowski e Lilly Wachowski.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "[movie:the-matrix] The Matrix foi dirigido por Lana Wachowski e Lilly Wachowski.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q6",
+      "category": "1_salto",
+      "question": "Qual estúdio produziu o filme Interstellar?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "O filme Interstellar foi produzido pela Paramount Pictures.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "Interstellar foi produzido pela Paramount Pictures. [movie:interstellar]",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q7",
+      "category": "1_salto",
+      "question": "Quem criou a série Dark?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "A série Dark foi criada por Bruno Soares e Barbara Broccoli.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.0,
+          "missing_entities": [
+            "Baran bo Odar",
+            "Jantje Friese"
+          ],
+          "unsupported_entities": [
+            "Bruno Soares",
+            "Barbara Broccoli"
+          ]
+        },
+        "hybrid": {
+          "answer": "Baran bo Odar criou a série Dark. [series:dark]",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 0.5,
+          "missing_entities": [
+            "Jantje Friese"
+          ],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q8",
+      "category": "2_saltos",
+      "question": "Quais atores atuaram em filmes dirigidos por Christopher Nolan?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Christopher Nolan dirigiu vários filmes e alguns dos atores principais que atuaram neles incluem:\n\n- Matt Damon em \"Inception\" (2010)\n- Tom Hardy em \"Dunkirk\" (2017)\n- Cillian Murphy em \"Memento\" (2000)\n- Michael Caine em \"The Dark Knight\" (2008)\n- Ellen Page em \"Inception\" (2010)\n- Tom Hardy em \"Interstellar\" (2014)\n- Amy Adams em \"Inception\" (2010)\n- Tom Hardy em \"The Dark Knight Rises\" (2012)\n\nÉ importante notar que essa lista é apenas uma parte de seus filmes e não inclui todos os atores que ele já trabalhou.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.0,
+          "missing_entities": [
+            "Leonardo DiCaprio",
+            "Joseph Gordon-Levitt",
+            "Elliot Page",
+            "Matthew McConaughey",
+            "Anne Hathaway",
+            "Jessica Chastain",
+            "Christian Bale",
+            "Heath Ledger"
+          ],
+          "unsupported_entities": [
+            "Damon",
+            "Hardy",
+            "Dunkirk",
+            "Murphy",
+            "Memento",
+            "Caine",
+            "Adams",
+            "Dark Knight Rises"
+          ]
+        },
+        "hybrid": {
+          "answer": "Christopher Nolan dirigiu os seguintes filmes: Inception (2010) e Interstellar (2014). Os atores que atuaram nesses filmes são:\n\n- Inception: Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page\n- Interstellar: Matthew McConaughey, Anne Hathaway, Jessica Chastain\n\nPortanto, os atores que atuaram em filmes dirigidos por Christopher Nolan são: Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page, Matthew McConaughey, Anne Hathaway e Jessica Chastain.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.75,
+          "missing_entities": [
+            "Christian Bale",
+            "Heath Ledger"
+          ],
+          "unsupported_entities": [
+            "Jessica Chastain Portanto"
+          ]
+        }
+      }
+    },
+    {
+      "id": "q9",
+      "category": "2_saltos",
+      "question": "Em quais séries Jonathan Banks atuou e quem as criou?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Jonathan Banks atuou em duas séries: \"Homeland\" e \"Skins\". \n\n\"Homeland\" foi criada por Howard Gordon e Alex Gansa.\n\"Skins\" foi criada por Mark Webber.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.0,
+          "missing_entities": [
+            "Breaking Bad",
+            "Better Call Saul",
+            "Vince Gilligan",
+            "Peter Gould"
+          ],
+          "unsupported_entities": [
+            "Skins",
+            "Howard Gordon",
+            "Alex Gansa",
+            "Mark Webber"
+          ]
+        },
+        "hybrid": {
+          "answer": "Jonathan Banks atuou nas séries Breaking Bad e Better Call Saul. Vince Gilligan e Peter Gould criaram Better Call Saul, enquanto Vince Gilligan criou Breaking Bad.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q10",
+      "category": "2_saltos",
+      "question": "Com quais atores Keanu Reeves contracenou nos filmes do catálogo?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Keanu Reeves atuou em vários filmes ao longo de sua carreira, e alguns deles incluem atores que podem ser de interesse. Algumas das séries e filmes nos quais ele atuou incluem: Laurence Fishburne, Joe Pantoliano, Hugo Weaving, entre outros. Sem uma lista específica de filmes, não posso citar todos os atores com certeza, mas esses nomes são conhecidos para trabalharem com Keanu Reeves.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.25,
+          "missing_entities": [
+            "Carrie-Anne Moss",
+            "Ian McShane",
+            "Willem Dafoe"
+          ],
+          "unsupported_entities": [
+            "Joe Pantoliano",
+            "Hugo Weaving"
+          ]
+        },
+        "hybrid": {
+          "answer": "Keanu Reeves contracenou nos seguintes filmes: [movie:john-wick] e [movie:the-matrix]. No filme [movie:john-wick], ele atuou ao lado de Ian McShane e Willem Dafoe. No filme [movie:the-matrix], ele atuou ao lado de Laurence Fishburne e Carrie-Anne Moss. Não há outros filmes mencionados nos quais Keanu Reeves atuou com base nas evidências fornecidas.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q11",
+      "category": "3_saltos",
+      "question": "Quais estúdios produziram séries criadas por quem criou Better Call Saul?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Não tenho informações específicas sobre quais estúdios produziram séries criadas por Vince Gilligan, o criador de Better Call Saul. Vince Gilligan é conhecido por ter criado séries como Breaking Bad, mas não tenho dados sobre produções adicionais que ele possa ter envolvido. Para obter essa informação precisa, seria necessário verificar fontes mais recentes ou especializadas em produção de séries.",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": 0.0,
+          "missing_entities": [
+            "AMC"
+          ],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "[A] AMC [B] AMC\n\nBetter Call Saul foi criada por Vince Gilligan e Peter Gould. Vince Gilligan também criou [A] Better Call Saul e [B] Breaking Bad, ambas produzidas pela AMC. Portanto, a única resposta possível é que ambos os estúdios produziram séries criadas por Vince Gilligan.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 1.0,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q12",
+      "category": "3_saltos",
+      "question": "Quais atores atuaram em séries criadas por quem criou Better Call Saul?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Não tenho informações específicas sobre quais atores atuaram em séries criadas por Vince Gilligan, o criador de \"Better Call Saul\". Vince Gilligan é conhecido por criar séries como \"Breaking Bad\", mas não tenho dados sobre outras séries que ele criou ou atores envolvidos nisso.",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": 0.0,
+          "missing_entities": [
+            "Bryan Cranston",
+            "Aaron Paul",
+            "Jonathan Banks",
+            "Bob Odenkirk"
+          ],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "Os atores que atuaram em séries criadas por quem criou Better Call Saul são Bob Odenkirk e Jonathan Banks, que atuaram em Better Call Saul. Não há informações sobre atores que atuaram em séries criadas por Vince Gilligan e Peter Gould, os criadores de Better Call Saul.",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": 0.5,
+          "missing_entities": [
+            "Bryan Cranston",
+            "Aaron Paul"
+          ],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q13",
+      "category": "agregacao",
+      "question": "Quais atores aparecem em mais de um título do catálogo?",
+      "answerable": true,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Como curador de um banco de dados de filmes e séries, não posso fornecer uma resposta precisa sem acesso direto a um banco de dados atual e completo. Para essa informação, você precisaria consultar um especialista em dados de cinema ou acessar um site de classificação de filmes que possua essas informações atualizadas.",
+          "correct": false,
+          "hallucinated": false,
+          "abstained": false,
+          "recall": 0.0,
+          "missing_entities": [
+            "Keanu Reeves",
+            "Jonathan Banks"
+          ],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "Os atores que aparecem em mais de um título do catálogo são:\n\n- Keanu Reeves que aparece em John Wick\n- Winona Ryder que aparece em Stranger Things\n- Bob Odenkirk que aparece em Better Call Saul\n\nEsses são os atores que aparecem em pelo menos dois títulos do catálogo.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": 0.5,
+          "missing_entities": [
+            "Jonathan Banks"
+          ],
+          "unsupported_entities": [
+            "Better Call Saul Esses"
+          ]
+        }
+      }
+    },
+    {
+      "id": "q14",
+      "category": "sem_resposta",
+      "question": "Quem dirigiu o filme Pulp Fiction?",
+      "answerable": false,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Quem dirigiu o filme Pulp Fiction foi Quentin Tarantino.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": [
+            "Quentin Tarantino"
+          ]
+        },
+        "hybrid": {
+          "answer": "Não há informações sobre Pulp Fiction neste catálogo.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q15",
+      "category": "sem_resposta",
+      "question": "Em quais filmes Tom Hanks atuou?",
+      "answerable": false,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Tom Hanks atuou em muitos filmes, e é difícil listar todos. Algumas de suas obras mais conhecidas incluem \"Forrest Gump\", \"O Corredor do Pânico\", \"O Corretor de Imóveis\", \"O Corpo Sujo\", \"O Coringa\", \"Amnistia\", \"O Poderoso Chefão II\", \"O Desejo de Deus\", \"O Diário de Anne Frank\", \"O Grande Hotel Astor\", \"O Grande Hotel Astor II\", \"O Poder de um Homem\", \"O Desejo de Deus\", \"O Corretor de Imóveis\", \"O Corredor do Pânico\", \"O Coringa\", \"Amnistia\", \"O Poderoso Chefão II\", \"O Desejo de Deus\", \"O Grande Hotel Astor\", \"O Grande Hotel Astor II\".",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": [
+            "Forrest Gump",
+            "O Corredor do Pânico",
+            "O Corretor de Imóveis",
+            "O Corpo Sujo",
+            "Amnistia",
+            "O Poderoso Chefão II",
+            "O Desejo de Deus",
+            "O Diário de Anne Frank",
+            "O Grande Hotel Astor",
+            "O Grande Hotel Astor II",
+            "O Poder",
+            "Homem"
+          ]
+        },
+        "hybrid": {
+          "answer": "Não há evidências suficientes nos dados fornecidos para responder a essa pergunta.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q16",
+      "category": "sem_resposta",
+      "question": "Qual estúdio produziu a série The Crown?",
+      "answerable": false,
+      "variants": {
+        "no_retrieval": {
+          "answer": "A série \"The Crown\" foi produzida pelo estúdio britânico Netflix.",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": []
+        },
+        "hybrid": {
+          "answer": "As evidências fornecidas não contêm informações sobre a série The Crown. Portanto, não é possível responder à pergunta com base nestas evidências.",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    },
+    {
+      "id": "q17",
+      "category": "sem_resposta",
+      "question": "Quais filmes Christopher Nolan dirigiu depois de 2015?",
+      "answerable": false,
+      "variants": {
+        "no_retrieval": {
+          "answer": "Christopher Nolan dirigiu três filmes após 2015: \"Arrival\" (2016), \"Interstellar\" (2014) e \"Dunkirk\" (2017).",
+          "correct": false,
+          "hallucinated": true,
+          "abstained": false,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": [
+            "Dunkirk"
+          ]
+        },
+        "hybrid": {
+          "answer": "Depois de 2015, Christopher Nolan dirigiu Inception (2010) e The Dark Knight (2008). Não há evidências de que Christopher Nolan tenha dirigido outros filmes após 2015. [movie:inception], [movie:the-dark-knight]",
+          "correct": true,
+          "hallucinated": false,
+          "abstained": true,
+          "recall": null,
+          "missing_entities": [],
+          "unsupported_entities": []
+        }
+      }
+    }
+  ]
+}

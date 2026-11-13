@@ -19,24 +19,37 @@ class Mention:
 @dataclass(frozen=True)
 class ExtractedRelations:
     mentions: list[Mention]
-    relations: list[tuple[str, str, str, float]]
+    relations: list[tuple[str, str, str, str]]
 
 
 def extract_entities_and_relations(text: str) -> ExtractedRelations:
     from src.model import ask
-    data = ask("Extract entities and explicit semantic relations from Portuguese prose. "
-               "Return JSON with entities [{name,type}] and relations [{source,predicate,target,quote}]. "
-               "Copy names and supporting quotes exactly from the input. No inferred facts.", text, True)
-    mentions = []
-    for entity in data["entities"]:
-        name = entity["name"].strip()
-        if name and name in text:
-            start = text.index(name)
-            mentions.append(Mention(canonical_id("entity", name), name, entity["type"], start, start+len(name)))
-    ids = {m.name:m.entity_id for m in mentions}
+    fields = {"source": {"type":"string"}, "predicate":{"type":"string"}, "target":{"type":"string"}}
+    schema = {"type":"object","required":["relations","entities"],"properties":{
+        "relations":{"type":"array","items":{"type":"object","properties":fields,"required":list(fields)}},
+        "entities":{"type":"array","items":{"type":"string"}}}}
+    data = ask("Leia a sinopse. Extraia triplas sujeito, verbo, objeto, com os tres campos "
+               "copiados literalmente na mesma frase e na ordem do texto. Inclua personagens, "
+               "grupos, objetos e conceitos. Use o verbo literal em predicate. Em entities liste "
+               "as expressoes nominais mencionadas.", text, schema)
+    import re
+    mentions = {}
+    def mention(name):
+        match = re.search(re.escape(name), text, re.I) if name.strip() else None
+        if match:
+            exact = match.group()
+            key = canonical_id("entity", exact)
+            mentions[key] = Mention(key, exact, "Entity", match.start(), match.end())
+            return key
+    for name in data["entities"]:
+        mention(name)
     relations = []
-    for r in data["relations"]:
-        quote = r.get("quote", "")
-        if quote and quote in text and all(r[k] in ids and r[k] in quote for k in ("source","target")):
-            relations.append((ids[r["source"]],ids[r["target"]],r["predicate"],1.0))
-    return ExtractedRelations(mentions, relations)
+    for triple in data["relations"]:
+        a, verb, b = (triple[key].strip() for key in ("source","predicate","target"))
+        if not all((a,verb,b)):
+            continue
+        pattern = r"[^.!?]*?".join(re.escape(part) for part in (a,verb,b))
+        span = re.search(pattern, text, re.I)
+        if span:
+            relations.append((mention(a),mention(b),verb,span.group()))
+    return ExtractedRelations(list(mentions.values()), relations)

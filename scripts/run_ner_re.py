@@ -12,9 +12,13 @@ def main() -> None:
     try:
         with driver.session() as session:
             session.run("MATCH (d:Document),(t) WHERE (t:Movie OR t:Series) AND t.id=d.id MERGE (d)-[:DESCRIBES]->(t)").consume()
+            import json
+            from pathlib import Path
+            titles = {r["id"]: r["synopsis"] for r in json.loads(Path("data/raw/titles.json").read_text(encoding="utf8"))}
             chunks = list(session.run("MATCH (c:Chunk) RETURN c.id AS id, c.text AS text"))
             for chunk in chunks:
-                extracted = extract_entities_and_relations(chunk["text"])
+                synopsis = titles.get(chunk["id"].rsplit(":chunk:",1)[0], chunk["text"])
+                extracted = extract_entities_and_relations(synopsis if synopsis in chunk["text"] else chunk["text"])
                 for mention in extracted.mentions:
                     session.run(
                         """
@@ -27,14 +31,14 @@ def main() -> None:
                         id=mention.entity_id, name=mention.name, entity_type=mention.entity_type, chunk_id=chunk["id"],
                     ).consume()
                     mentions_count += 1
-                for source_id, target_id, relation, confidence in extracted.relations:
+                for source_id, target_id, relation, quote in extracted.relations:
                     session.run(
                         """
                         MATCH (source:Entity {id: $source_id}), (target:Entity {id: $target_id})
                         MERGE (source)-[r:RELATED_TO {relation_type:$relation,chunk:$chunk_id}]->(target)
-                        SET r.relation_type = $relation, r.confidence = $confidence
+                        SET r.relation_type = $relation, r.quote = $quote
                         """,
-                        chunk_id=chunk["id"], source_id=source_id, target_id=target_id, relation=relation, confidence=confidence,
+                        chunk_id=chunk["id"], source_id=source_id, target_id=target_id, relation=relation, quote=quote,
                     ).consume()
                     relations_count += 1
         print(f"NER/RE concluído: {mentions_count} menções, {relations_count} relações")

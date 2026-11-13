@@ -200,7 +200,11 @@ if st.button("Executar consulta", type="primary"):
         with st.expander("Resultados e scores"):
             st.json(results)
         with st.expander("Cypher e evidências"):
-            st.code(result["cypher"], language="text")
+            trace = executed_cypher.get("generated", {})
+            if trace.get("error"):
+                st.warning(trace["error"])
+            st.code(trace.get("query", ""), language="cypher")
+            st.json(trace.get("parameters", {}))
             st.subheader("Títulos recuperados")
             for index, title in enumerate(result["evidence_titles"], 1):
                 st.markdown(f"{index}. **{title}**")
