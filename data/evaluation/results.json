@@ -4,8 +4,8 @@
     "min_hops": 2,
     "vector_documents": [
       "movie:john-wick",
-      "series:better-call-saul",
-      "series:dark",
+      "movie:inception",
+      "movie:the-dark-knight",
       "series:stranger-things",
       "movie:the-matrix"
     ],
@@ -13,118 +13,439 @@
       "movie:john-wick",
       "movie:the-matrix",
       "series:stranger-things",
-      "movie:interstellar",
-      "movie:inception"
+      "movie:inception",
+      "movie:interstellar"
     ],
     "hybrid_scores": [
-      0.6824,
-      0.6202,
-      0.4224,
-      0.3826,
-      0.3596
+      0.6917,
+      0.6037,
+      0.4019,
+      0.3988,
+      0.3853
     ],
     "vector_hit": true,
     "hybrid_hit": true,
     "no_retrieval_baseline": {
-      "answer": "Nenhuma evidência consultada.",
-      "grounded": false,
-      "sources": []
+      "answer": {
+        "facts": [
+          {
+            "title": "Keanu Reeves",
+            "person": "Keanu Reeves"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "keanu reeves",
+          "keanu reeves"
+        ]
+      ],
+      "missing": [
+        [
+          "john wick",
+          "chad stahelski"
+        ],
+        [
+          "the matrix",
+          "lana wachowski"
+        ],
+        [
+          "the matrix",
+          "lilly wachowski"
+        ]
+      ],
+      "supported": []
+    },
+    "graph_rag": {
+      "answer": {
+        "facts": [
+          {
+            "title": "John Wick",
+            "person": "Keanu Reeves"
+          },
+          {
+            "title": "The Matrix",
+            "person": "Keanu Reeves"
+          },
+          {
+            "title": "Inception",
+            "person": "Keanu Reeves"
+          },
+          {
+            "title": "Interstellar",
+            "person": "Keanu Reeves"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "inception",
+          "keanu reeves"
+        ],
+        [
+          "interstellar",
+          "keanu reeves"
+        ],
+        [
+          "john wick",
+          "keanu reeves"
+        ],
+        [
+          "the matrix",
+          "keanu reeves"
+        ]
+      ],
+      "missing": [
+        [
+          "john wick",
+          "chad stahelski"
+        ],
+        [
+          "the matrix",
+          "lana wachowski"
+        ],
+        [
+          "the matrix",
+          "lilly wachowski"
+        ]
+      ],
+      "supported": []
     }
   },
   {
     "id": "q2",
     "min_hops": 2,
     "vector_documents": [
-      "movie:the-matrix",
+      "movie:john-wick",
+      "movie:inception",
       "movie:the-dark-knight",
       "series:stranger-things",
-      "series:breaking-bad",
-      "movie:john-wick"
+      "movie:the-matrix"
     ],
     "hybrid_documents": [
       "movie:the-dark-knight",
-      "movie:the-matrix",
-      "movie:interstellar",
       "movie:inception",
+      "movie:interstellar",
+      "movie:the-matrix",
       "series:stranger-things"
     ],
     "hybrid_scores": [
-      0.6068,
-      0.5686,
-      0.5627,
-      0.5462,
-      0.4103
+      0.5784,
+      0.5631,
+      0.5539,
+      0.5214,
+      0.3775
     ],
     "vector_hit": true,
     "hybrid_hit": true,
     "no_retrieval_baseline": {
-      "answer": "Nenhuma evidência consultada.",
-      "grounded": false,
-      "sources": []
+      "answer": {
+        "facts": [
+          {
+            "title": "Christopher Nolan",
+            "person": "Christopher Nolan"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "christopher nolan",
+          "christopher nolan"
+        ]
+      ],
+      "missing": [
+        [
+          "inception",
+          "warner bros."
+        ],
+        [
+          "interstellar",
+          "paramount pictures"
+        ],
+        [
+          "the dark knight",
+          "warner bros."
+        ]
+      ],
+      "supported": []
+    },
+    "graph_rag": {
+      "answer": {
+        "facts": [
+          {
+            "title": "The Dark Knight",
+            "person": "Warner Bros"
+          },
+          {
+            "title": "Inception",
+            "person": "Warner Bros"
+          },
+          {
+            "title": "Interstellar",
+            "person": "Paramount Pictures"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "inception",
+          "warner bros"
+        ],
+        [
+          "the dark knight",
+          "warner bros"
+        ]
+      ],
+      "missing": [
+        [
+          "inception",
+          "warner bros."
+        ],
+        [
+          "the dark knight",
+          "warner bros."
+        ]
+      ],
+      "supported": [
+        [
+          "interstellar",
+          "paramount pictures"
+        ]
+      ]
     }
   },
   {
     "id": "q3",
     "min_hops": 2,
     "vector_documents": [
-      "series:breaking-bad",
-      "movie:the-matrix",
       "series:better-call-saul",
+      "movie:john-wick",
+      "series:breaking-bad",
       "series:stranger-things",
-      "series:dark"
+      "movie:inception"
     ],
     "hybrid_documents": [
-      "series:breaking-bad",
       "series:better-call-saul",
+      "series:breaking-bad",
       "movie:the-matrix",
       "series:stranger-things",
       "movie:the-dark-knight"
     ],
     "hybrid_scores": [
-      0.6332,
-      0.6195,
-      0.5299,
-      0.3898,
-      0.3613
+      0.6186,
+      0.616,
+      0.497,
+      0.3776,
+      0.3557
     ],
     "vector_hit": true,
     "hybrid_hit": true,
     "no_retrieval_baseline": {
-      "answer": "Nenhuma evidência consultada.",
-      "grounded": false,
-      "sources": []
+      "answer": {
+        "facts": [
+          {
+            "title": "Séries criadas por Vince Gilligan",
+            "person": "Vince Gilligan"
+          },
+          {
+            "title": "Séries criadas por Vince Gilligan",
+            "person": "CBS"
+          },
+          {
+            "title": "Ator que interpretou o personagem de Saul Griffin",
+            "person": "Michael Madsen"
+          },
+          {
+            "title": "Ator que interpretou o personagem de Saul Griffin",
+            "person": "Vince Gilligan"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "ator que interpretou o personagem de saul griffin",
+          "michael madsen"
+        ],
+        [
+          "ator que interpretou o personagem de saul griffin",
+          "vince gilligan"
+        ],
+        [
+          "séries criadas por vince gilligan",
+          "cbs"
+        ],
+        [
+          "séries criadas por vince gilligan",
+          "vince gilligan"
+        ]
+      ],
+      "missing": [
+        [
+          "better call saul",
+          "bob odenkirk"
+        ],
+        [
+          "better call saul",
+          "jonathan banks"
+        ],
+        [
+          "breaking bad",
+          "aaron paul"
+        ],
+        [
+          "breaking bad",
+          "bryan cranston"
+        ],
+        [
+          "breaking bad",
+          "jonathan banks"
+        ]
+      ],
+      "supported": []
+    },
+    "graph_rag": {
+      "answer": {
+        "facts": [
+          {
+            "title": "Breaking Bad",
+            "person": "Vince Gilligan"
+          },
+          {
+            "title": "Better Call Saul",
+            "person": "Vince Gilligan"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "better call saul",
+          "vince gilligan"
+        ],
+        [
+          "breaking bad",
+          "vince gilligan"
+        ]
+      ],
+      "missing": [
+        [
+          "better call saul",
+          "bob odenkirk"
+        ],
+        [
+          "better call saul",
+          "jonathan banks"
+        ],
+        [
+          "breaking bad",
+          "aaron paul"
+        ],
+        [
+          "breaking bad",
+          "bryan cranston"
+        ],
+        [
+          "breaking bad",
+          "jonathan banks"
+        ]
+      ],
+      "supported": []
     }
   },
   {
     "id": "q4",
     "min_hops": 2,
     "vector_documents": [
+      "movie:interstellar",
+      "series:stranger-things",
       "series:dark",
-      "series:better-call-saul",
+      "movie:the-matrix",
+      "movie:inception"
+    ],
+    "hybrid_documents": [
+      "series:dark",
+      "movie:interstellar",
       "series:stranger-things",
       "series:breaking-bad",
       "movie:the-matrix"
     ],
-    "hybrid_documents": [
-      "series:dark",
-      "series:stranger-things",
-      "series:breaking-bad",
-      "movie:interstellar",
-      "movie:the-dark-knight"
-    ],
     "hybrid_scores": [
-      0.6521,
-      0.4383,
-      0.4067,
-      0.4042,
-      0.3451
+      0.6163,
+      0.4445,
+      0.4421,
+      0.371,
+      0.3243
     ],
     "vector_hit": true,
     "hybrid_hit": true,
     "no_retrieval_baseline": {
-      "answer": "Nenhuma evidência consultada.",
-      "grounded": false,
-      "sources": []
+      "answer": {
+        "facts": [
+          {
+            "title": "Série da Netflix",
+            "person": "The Midnight Sky"
+          },
+          {
+            "title": "Série da Netflix",
+            "person": "Time Bandits"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "série da netflix",
+          "the midnight sky"
+        ],
+        [
+          "série da netflix",
+          "time bandits"
+        ]
+      ],
+      "missing": [
+        [
+          "dark",
+          "baran bo odar"
+        ],
+        [
+          "dark",
+          "jantje friese"
+        ]
+      ],
+      "supported": []
+    },
+    "graph_rag": {
+      "answer": {
+        "facts": [
+          {
+            "title": "Dark",
+            "person": "Baran bo Odar, Jantje Friese"
+          },
+          {
+            "title": "Stranger Things",
+            "person": "Matt Duffer, Ross Duffer"
+          }
+        ]
+      },
+      "unsupported": [
+        [
+          "dark",
+          "baran bo odar, jantje friese"
+        ],
+        [
+          "stranger things",
+          "matt duffer, ross duffer"
+        ]
+      ],
+      "missing": [
+        [
+          "dark",
+          "baran bo odar"
+        ],
+        [
+          "dark",
+          "jantje friese"
+        ]
+      ],
+      "supported": []
     }
   }
 ]
