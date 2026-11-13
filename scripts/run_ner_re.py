@@ -11,6 +11,7 @@ def main() -> None:
     mentions_count = relations_count = 0
     try:
         with driver.session() as session:
+            session.run("MATCH (d:Document),(t) WHERE (t:Movie OR t:Series) AND t.id=d.id MERGE (d)-[:DESCRIBES]->(t)").consume()
             chunks = list(session.run("MATCH (c:Chunk) RETURN c.id AS id, c.text AS text"))
             for chunk in chunks:
                 extracted = extract_entities_and_relations(chunk["text"])
@@ -21,7 +22,7 @@ def main() -> None:
                         SET e.canonical_name = $name, e.entity_type = $entity_type, e.name = $name
                         WITH e
                         MATCH (c:Chunk {id: $chunk_id})
-                        MERGE (c)-[:MENTIONS]->(e)
+                        MERGE (c)-[:MENTIONS]->(e) WITH c,e MATCH (c)<-[:HAS_CHUNK]-(:Document)-[:DESCRIBES]->(t) MERGE (e)-[:MENTIONED_IN]->(t)
                         """,
                         id=mention.entity_id, name=mention.name, entity_type=mention.entity_type, chunk_id=chunk["id"],
                     ).consume()
@@ -30,10 +31,10 @@ def main() -> None:
                     session.run(
                         """
                         MATCH (source:Entity {id: $source_id}), (target:Entity {id: $target_id})
-                        MERGE (source)-[r:RELATED_TO]->(target)
+                        MERGE (source)-[r:RELATED_TO {relation_type:$relation,chunk:$chunk_id}]->(target)
                         SET r.relation_type = $relation, r.confidence = $confidence
                         """,
-                        source_id=source_id, target_id=target_id, relation=relation, confidence=confidence,
+                        chunk_id=chunk["id"], source_id=source_id, target_id=target_id, relation=relation, confidence=confidence,
                     ).consume()
                     relations_count += 1
         print(f"NER/RE concluído: {mentions_count} menções, {relations_count} relações")

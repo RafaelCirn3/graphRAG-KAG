@@ -1,0 +1,182 @@
+% Artigo no template SBC. Requer sbc-template.sty e sbc.bst (baixar do site da SBC:
+% https://www.sbc.org.br/documentos-da-sbc/category/169-templates-para-artigos-e-capitulos-de-livros).
+% Compilar: pdflatex artigo; bibtex artigo; pdflatex artigo; pdflatex artigo
+% Marcações TODO(...) indicam trechos que dependem do trabalho de outro integrante.
+
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+\usepackage{graphicx,url}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+
+\sloppy
+
+\title{GraphRAG e KAG sobre um Catálogo de Filmes e Séries: \\
+Recuperação em Grafo de Propriedades para Reduzir Alucinações em LLMs}
+
+\author{Ewellyn Maria\inst{1}, Gustavo Palmeira\inst{1}, Rafael Cirne\inst{1},\\
+Julliane Di Paula\inst{1}, Felipe Souto Maior\inst{1}, Arthur Xavier\inst{1}}
+
+\address{UNIPÊ -- Centro Universitário de João Pessoa\\
+BR-230 -- Água Fria, João Pessoa -- PB, 58053-000
+\email{\{ewellyn.andrade, gustavo.martinez, rafael.medeiros,}\\
+{\footnotesize\texttt{julliane.xavier, felipe.mendes, acavalcante\}@cs.unipe.edu.br}}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Large language models answer fluently even when they lack the facts, which produces
+hallucinations. This paper presents a GraphRAG/KAG prototype that stores a catalog of movies and TV
+series in a Neo4j property graph and answers multi-hop questions from retrieved, traceable evidence.
+We compare three variants---an LLM without retrieval, vector RAG and hybrid GraphRAG---on
+17 questions whose gold answers are derived from the catalog itself, including questions that
+the catalog cannot answer. [TODO: resumir resultado numérico após a execução final.]
+\end{abstract}
+
+\begin{resumo}
+Modelos de linguagem respondem com fluência mesmo sem conhecer os fatos, o que gera alucinações.
+Este trabalho apresenta um protótipo de GraphRAG/KAG que armazena um catálogo de filmes e séries
+em um grafo de propriedades no Neo4j e responde perguntas multi-hop a partir de evidências
+recuperadas e rastreáveis. Comparamos três variantes (LLM sem recuperação, RAG vetorial e GraphRAG
+híbrido) em 17 perguntas cujo gabarito é derivado do próprio catálogo, incluindo perguntas que o
+catálogo não consegue responder. [TODO: resumir o resultado numérico após a execução final.]
+\end{resumo}
+
+\section{Introdução}
+
+Modelos de linguagem de grande porte (LLMs) geram texto plausível independentemente de possuírem a
+informação necessária, e esse comportamento é conhecido como alucinação~\cite{ji2023survey}. A
+geração aumentada por recuperação (RAG) reduz o problema ao fornecer ao modelo trechos de texto
+relevantes~\cite{lewis2020rag}, mas a busca por similaridade vetorial recupera trechos isolados e tem
+dificuldade com perguntas que exigem combinar fatos espalhados em vários documentos, como
+\emph{``quais atores atuaram em séries criadas por quem criou Better Call Saul?''}.
+
+Abordagens baseadas em grafos de conhecimento atacam essa limitação ao representar entidades e
+relações explicitamente, permitindo percorrer múltiplos saltos~\cite{edge2024graphrag,liang2024kag}.
+Este trabalho constrói um protótipo acadêmico de ponta a ponta e responde à pergunta de pesquisa:
+\textbf{a recuperação em grafo reduz a alucinação de um LLM em relação ao mesmo LLM sem recuperação e
+ao RAG puramente vetorial?}
+
+As contribuições são: (i) um pipeline Text-to-Graph sobre um catálogo de filmes e séries com
+persistência em Neo4j; (ii) recuperação híbrida (vetor, texto completo e caminho no grafo) com
+resposta fundamentada e Cypher exibido; e (iii) um protocolo de avaliação cujo gabarito é derivado
+do catálogo e que inclui perguntas sem resposta, para medir se o sistema se abstém em vez de inventar.
+
+\section{Fundamentação Teórica}
+
+\subsection{Alucinação e RAG}
+Alucinação é a geração de conteúdo não sustentado pela fonte ou pelo mundo~\cite{ji2023survey}. Em
+sistemas RAG~\cite{lewis2020rag}, a fonte é o conjunto de trechos recuperados, e a fidelidade a ela
+(\emph{grounding}) é a propriedade que buscamos medir.
+
+\subsection{Grafos de propriedades e Cypher}
+Em um grafo de propriedades rotulado (LPG), nós e relações possuem rótulos e propriedades. O Neo4j
+armazena esse modelo e é consultado com Cypher~\cite{francis2018cypher}. Perguntas multi-hop
+correspondem a padrões de caminho, por exemplo
+$(Person)\!-\![:ACTED\_IN]\!\rightarrow\!(Movie)\!\leftarrow\![:DIRECTED]\!-\!(Person)$.
+
+\subsection{GraphRAG e KAG}
+O GraphRAG~\cite{edge2024graphrag} constrói um grafo a partir de texto e usa detecção de
+comunidades e resumos para responder perguntas globais; o KAG~\cite{liang2024kag} integra grafo de
+conhecimento e geração com raciocínio guiado por lógica. Algoritmos como PageRank~\cite{page1999pagerank}
+e Leiden~\cite{traag2019leiden} podem enriquecer o contexto com a importância e a comunidade dos nós.
+% TODO(Pessoa 3): confirmar quais algoritmos entraram na versão final.
+
+\section{Arquitetura do Sistema}
+
+O fluxo implementado é: fonte $\rightarrow$ documento $\rightarrow$ chunk $\rightarrow$
+entidades e relações $\rightarrow$ Neo4j $\rightarrow$ recuperação híbrida $\rightarrow$ contexto
+fundamentado $\rightarrow$ interface.
+
+\begin{itemize}
+  \item \textbf{Dados:} catálogo de 9 títulos (5 filmes e 4 séries) com diretores/criadores, elenco,
+        gêneros e estúdio, conferidos na Wikipedia (CC BY-SA 4.0).
+  \item \textbf{Text-to-Graph:} nós \texttt{Movie}, \texttt{Series}, \texttt{Person}, \texttt{Genre},
+        \texttt{Studio}, \texttt{Document}, \texttt{Chunk} e \texttt{Entity}; relações \texttt{DIRECTED},
+        \texttt{CREATED}, \texttt{ACTED\_IN}, \texttt{HAS\_GENRE}, \texttt{PRODUCED\_BY},
+        \texttt{HAS\_CHUNK}, \texttt{MENTIONS} e \texttt{RELATED\_TO}.
+        % TODO(Pessoa 2): NER/RE final e ligação Document--Movie/Series.
+  \item \textbf{Recuperação:} índice vetorial (cosseno, 384 dimensões), índice de texto completo e
+        pontuação por caminho mais curto, combinados em um escore híbrido.
+        % TODO(Pessoas 1 e 3): embeddings semânticos, geração de Cypher por LLM e multi-hop real.
+  \item \textbf{Geração:} LLM local (Ollama) com as evidências como único contexto; sem Ollama,
+        resposta por \emph{template}.
+\end{itemize}
+
+\section{Metodologia de Avaliação}
+
+\subsection{Conjunto de perguntas}
+São 17 perguntas em cinco categorias: 1 salto (3), 2 saltos (6), 3 saltos (2), agregação (1) e
+\emph{sem resposta no catálogo} (4). O gabarito de cada pergunta (entidades esperadas e documentos de
+suporte) é \textbf{calculado a partir de \texttt{titles.json}}, e não escrito à mão, o que evita
+inconsistência e permite regerar o conjunto se o catálogo crescer. As perguntas sem resposta
+(por exemplo, um filme que não está no catálogo) verificam se o sistema admite não saber; a geração
+do conjunto falha se o catálogo passar a conter a resposta, para que essas perguntas continuem válidas.
+
+\subsection{Variantes comparadas}
+\begin{enumerate}
+  \item \textbf{LLM sem recuperação:} o mesmo modelo recebe apenas a pergunta, com prompt neutro.
+  \item \textbf{RAG vetorial:} os 5 documentos mais próximos pelo índice vetorial viram contexto.
+  \item \textbf{GraphRAG híbrido:} contexto da recuperação híbrida com caminho no grafo.
+  \item \textbf{LLM externo sem recuperação} (opcional): respostas fornecidas por arquivo.
+\end{enumerate}
+O modelo gerador e o prompt de fundamentação são idênticos nas variantes 2 e 3; apenas o contexto muda.
+
+\subsection{Métricas}
+\begin{itemize}
+  \item \textbf{Recall de entidades:} fração das entidades do gabarito citadas na resposta.
+  \item \textbf{Acerto:} perguntas respondíveis com recall total; perguntas sem resposta com abstenção
+        e sem entidades inventadas.
+  \item \textbf{Alucinação:} resposta que cita nome próprio ausente do catálogo e da pergunta, ou que
+        responde com segurança uma pergunta sem resposta no catálogo.
+  \item \textbf{Avaliação humana:} correção, relevância, completude e fundamentação (escala 1--5)
+        em planilha-modelo, para validar a métrica automática.
+\end{itemize}
+A alucinação é medida em relação ao \emph{catálogo}, não ao mundo real: uma resposta verdadeira fora
+do catálogo conta como não fundamentada. A detecção de entidades é heurística (nomes próprios com
+inicial maiúscula) e subestima casos em que uma palavra única inicia a frase.
+
+\section{Resultados}
+
+% TODO: rodar `python -m scripts.evaluate_hallucination` com o pipeline final e colar a tabela.
+\begin{table}[ht]
+\centering
+\caption{Resultados gerais (preencher após a execução final).}
+\label{tab:geral}
+\begin{tabular}{lrrrr}
+\toprule
+Variante & Acerto & Recall médio & Alucinação & Abstenção correta \\
+\midrule
+LLM sem recuperação & -- & -- & -- & -- \\
+RAG vetorial        & -- & -- & -- & -- \\
+GraphRAG híbrido    & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% TODO: tabela por categoria (1, 2 e 3 saltos, agregação, sem resposta) e análise de erros.
+
+\section{Discussão e Limitações}
+
+Os resultados devem ser lidos com cautela. O catálogo tem apenas 9 títulos, de modo que o
+experimento demonstra o mecanismo, mas não permite conclusões estatísticas. Os embeddings usados são
+por \emph{hashing} determinístico e não capturam semântica, o que favorece a busca por termos exatos.
+O gerador é um modelo pequeno executado localmente, e a métrica automática depende de heurística de
+extração de entidades. Por fim, o baseline sem recuperação tem vantagem injusta de conhecimento
+paramétrico sobre os filmes reais, mas é penalizado por usar fatos fora do catálogo.
+% TODO: revisar esta seção com os números finais e as limitações vigentes dos demais módulos.
+
+\section{Conclusão}
+
+% TODO: conclusão após os resultados. Resumir (i) o que o grafo acrescentou em perguntas multi-hop,
+% (ii) o comportamento de abstenção, e (iii) trabalhos futuros (catálogo maior, embeddings
+% semânticos, citações e comunidades, avaliação humana ampliada).
+
+\bibliographystyle{sbc}
+\bibliography{Referencias/referencias}
+
+\end{document}

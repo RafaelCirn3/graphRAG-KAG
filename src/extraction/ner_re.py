@@ -2,18 +2,9 @@
 
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 
 from src.extraction.entity_resolution import canonical_id
-
-
-ENTITY_PATTERNS = {
-    "Theme": [
-        "inteligência artificial", "simulação", "crime organizado", "vingança", "sonhos",
-        "buraco negro", "viagem no tempo", "tráfico de drogas", "sobrenatural",
-    ],
-}
 
 
 @dataclass(frozen=True)
@@ -32,15 +23,20 @@ class ExtractedRelations:
 
 
 def extract_entities_and_relations(text: str) -> ExtractedRelations:
-    mentions: list[Mention] = []
-    for entity_type, names in ENTITY_PATTERNS.items():
-        for name in names:
-            for match in re.finditer(re.escape(name), text, flags=re.IGNORECASE):
-                mentions.append(Mention(canonical_id("entity", name), name, entity_type, match.start(), match.end()))
-    unique = {(mention.entity_id, mention.start): mention for mention in mentions}
-    ordered = sorted(unique.values(), key=lambda item: item.start)
+    from src.model import ask
+    data = ask("Extract entities and explicit semantic relations from Portuguese prose. "
+               "Return JSON with entities [{name,type}] and relations [{source,predicate,target,quote}]. "
+               "Copy names and supporting quotes exactly from the input. No inferred facts.", text, True)
+    mentions = []
+    for entity in data["entities"]:
+        name = entity["name"].strip()
+        if name and name in text:
+            start = text.index(name)
+            mentions.append(Mention(canonical_id("entity", name), name, entity["type"], start, start+len(name)))
+    ids = {m.name:m.entity_id for m in mentions}
     relations = []
-    for left, right in zip(ordered, ordered[1:]):
-        if right.start - left.end <= 120:
-            relations.append((left.entity_id, right.entity_id, "RELATED_TO", 0.6))
-    return ExtractedRelations(ordered, relations)
+    for r in data["relations"]:
+        quote = r.get("quote", "")
+        if quote and quote in text and all(r[k] in ids and r[k] in quote for k in ("source","target")):
+            relations.append((ids[r["source"]],ids[r["target"]],r["predicate"],1.0))
+    return ExtractedRelations(mentions, relations)

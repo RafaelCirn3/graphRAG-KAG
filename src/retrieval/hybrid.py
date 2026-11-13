@@ -7,7 +7,7 @@ from typing import Any
 
 from neo4j import Driver
 
-from src.graph.algorithms import shortest_path
+from src.retrieval.graph_context import enrich, generated_paths
 from src.retrieval.embeddings import embed_text
 
 
@@ -43,31 +43,23 @@ def hybrid_search(driver: Driver, question: str, limit: int = 5) -> list[dict[st
             if current and current["vector_score"] >= item["vector_score"]:
                 continue
             merged_by_document[document_id] = item
+        generated, paths = generated_paths(session, question)
+        metrics = enrich(session)
         for item in list(merged_by_document.values()):
             document_id = item["document_id"]
-            path_target = session.run(
-                "MATCH (p {id: $document_id})--(neighbor) WHERE p:Movie OR p:Series RETURN neighbor.id AS id LIMIT 1",
-                document_id=document_id,
-            ).single()
-            path = shortest_path(driver, document_id, path_target["id"]) if path_target else {"nodes": [], "relationships": []}
-            path_score = min(1.0, len(path.get("relationships", [])) / 3.0) if path.get("relationships") else 0.0
+            matching = [row for row in paths if row["document_id"] == document_id]
+            path = {"paths": matching, **metrics.get(document_id, {})}
+            path_score = float(bool(matching))
             vector_score = float(item.get("vector_score") or 0.0)
             fulltext_score = text_scores.get(document_id, 0.0) / max_text
             searchable_text = f"{item.get('title', '')} {item.get('text', '')}".lower()
             keyword_score = sum(1 for term in terms if term in searchable_text) / max(len(terms), 1)
-            if terms and keyword_score == 0 and fulltext_score == 0:
-                merged_by_document.pop(document_id, None)
-                continue
             item["keyword_score"] = round(keyword_score, 4)
             item["fulltext_score"] = round(fulltext_score, 4)
             item["path_score"] = round(path_score, 4)
             item["hybrid_score"] = round(0.5 * vector_score + 0.2 * fulltext_score + 0.1 * keyword_score + 0.2 * path_score, 4)
             item["path"] = path
-            item["executed_cypher"] = {
-                "vector": "CALL db.index.vector.queryNodes('chunk_embedding_vector', $candidate_limit, $embedding)",
-                "fulltext": "CALL db.index.fulltext.queryNodes('chunk_text_fulltext', $question)",
-                "path": "MATCH path = shortestPath((source)-[*..6]-(target))",
-            }
+            item["executed_cypher"] = {"generated": generated}
     return sorted(merged_by_document.values(), key=lambda item: item["hybrid_score"], reverse=True)[:limit]
 
 

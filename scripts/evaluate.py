@@ -6,6 +6,7 @@ from pathlib import Path
 from neo4j import GraphDatabase
 
 from src.config import settings
+from src.model import ask
 from src.retrieval.embeddings import embed_text
 from src.retrieval.hybrid import hybrid_search
 
@@ -28,6 +29,30 @@ def main() -> None:
                     embedding=embed_text(question),
                 ).single()["documents"]
                 hybrid = hybrid_search(driver, question, 5)
+                prompt = ("Answer the question about this catalog in Portuguese. Return JSON "
+                          "with facts, a list of {title,person} pairs. For studios use the "
+                          "studio name as person. Include only pairs answering the question.")
+                baseline = ask(prompt, question, True)
+                augmented = ask(prompt, question + "\nEvidence: " + json.dumps(hybrid, ensure_ascii=False), True)
+                catalog = json.loads(Path("data/raw/titles.json").read_text(encoding="utf8"))
+                rules = {"q1": ("cast", "Keanu Reeves", "creators"),
+                         "q2": ("creators", "Christopher Nolan", "studio"),
+                         "q3": ("creators", "Vince Gilligan", "cast"),
+                         "q4": ("studio", "Netflix", "creators")}
+                field, anchor, target = rules[item["id"]]
+                gold = set()
+                for title in catalog:
+                    if anchor not in title[field]:
+                        continue
+                    if item["id"] == "q4" and "viagem no tempo" not in title["synopsis"].lower():
+                        continue
+                    values = title[target]
+                    for value in ([values] if isinstance(values,str) else values):
+                        gold.add((title["title"].casefold(),value.casefold()))
+                def score(answer):
+                    facts = {(f["title"].casefold(),f["person"].casefold()) for f in answer["facts"]}
+                    return {"answer":answer, "unsupported": sorted(facts-gold),
+                            "missing":sorted(gold-facts), "supported":sorted(gold & facts)}
                 results.append({
                     "id": item["id"],
                     "min_hops": item["min_hops"],
@@ -36,11 +61,8 @@ def main() -> None:
                     "hybrid_scores": [row["hybrid_score"] for row in hybrid],
                     "vector_hit": bool(vector),
                     "hybrid_hit": bool(hybrid),
-                    "no_retrieval_baseline": {
-                        "answer": "Nenhuma evidência consultada.",
-                        "grounded": False,
-                        "sources": [],
-                    },
+                    "no_retrieval_baseline": score(baseline),
+                    "graph_rag": score(augmented),
                 })
     finally:
         driver.close()

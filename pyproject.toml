@@ -9,7 +9,7 @@ description = "Projeto acadêmico de GraphRAG e KAG com Neo4j"
 requires-python = ">=3.11"
 dependencies = [
   "neo4j>=5.20",
-  "streamlit>=1.40"
+  "streamlit>=1.40", "sentence-transformers>=3,<6", "networkx>=3.2", "scipy", "pytest>=8"
 ]
 
 [project.optional-dependencies]

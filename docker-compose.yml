@@ -45,16 +45,21 @@ services:
       NEO4J_USERNAME: neo4j
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:-change-me}
       EMBEDDING_DIMENSION: 384
+      OLLAMA_URL: http://ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:3b}
     depends_on:
       neo4j:
         condition: service_healthy
+      ollama-pull:
+        condition: service_completed_successfully
     command: >-
       sh -c "python -m scripts.migrate
       && python -m scripts.load_sample --input data/raw/titles.json
       && python -m scripts.run_text_to_graph --input data/raw/titles.json
       && python -m scripts.build_embeddings
-      && python -m scripts.evaluate
-      && python -m scripts.run_ner_re"
+      && python -m scripts.run_ner_re
+      && RUN_NEO4J_TESTS=1 python -m pytest -q tests/test_neo4j_operational.py
+      && python -m scripts.evaluate"
     volumes:
       - ./data:/app/data
 
