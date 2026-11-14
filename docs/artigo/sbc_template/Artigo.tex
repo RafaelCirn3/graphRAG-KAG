@@ -32,18 +32,16 @@ BR-230 -- Água Fria, João Pessoa -- PB, 58053-000
 Large language models answer fluently even when they lack the facts, which produces
 hallucinations. This paper presents a GraphRAG/KAG prototype that stores a catalog of movies and TV
 series in a Neo4j property graph and answers multi-hop questions from retrieved, traceable evidence.
-We compare three variants---an LLM without retrieval, vector RAG and hybrid GraphRAG---on
-17 questions whose gold answers are derived from the catalog itself, including questions that
-the catalog cannot answer. [TODO: resumir resultado numérico após a execução final.]
+On 17 questions, hybrid GraphRAG answered 13 correctly, compared with 3 for the same model without retrieval. The evaluator flagged hallucinations in 2 and 11 answers, respectively.
+
 \end{abstract}
 
 \begin{resumo}
 Modelos de linguagem respondem com fluência mesmo sem conhecer os fatos, o que gera alucinações.
 Este trabalho apresenta um protótipo de GraphRAG/KAG que armazena um catálogo de filmes e séries
 em um grafo de propriedades no Neo4j e responde perguntas multi-hop a partir de evidências
-recuperadas e rastreáveis. Comparamos três variantes (LLM sem recuperação, RAG vetorial e GraphRAG
-híbrido) em 17 perguntas cujo gabarito é derivado do próprio catálogo, incluindo perguntas que o
-catálogo não consegue responder. [TODO: resumir o resultado numérico após a execução final.]
+recuperadas e rastreáveis. Em 17 perguntas, o GraphRAG acertou 13, frente a três acertos do mesmo modelo sem recuperação. O avaliador automático identificou alucinações em duas e 11 respostas, respectivamente.
+
 \end{resumo}
 
 \section{Introdução}
@@ -58,8 +56,7 @@ dificuldade com perguntas que exigem combinar fatos espalhados em vários docume
 Abordagens baseadas em grafos de conhecimento atacam essa limitação ao representar entidades e
 relações explicitamente, permitindo percorrer múltiplos saltos~\cite{edge2024graphrag,liang2024kag}.
 Este trabalho constrói um protótipo acadêmico de ponta a ponta e responde à pergunta de pesquisa:
-\textbf{a recuperação em grafo reduz a alucinação de um LLM em relação ao mesmo LLM sem recuperação e
-ao RAG puramente vetorial?}
+\textbf{a recuperação em grafo reduz a alucinação de um LLM em relação ao mesmo LLM sem recuperação?}
 
 As contribuições são: (i) um pipeline Text-to-Graph sobre um catálogo de filmes e séries com
 persistência em Neo4j; (ii) recuperação híbrida (vetor, texto completo e caminho no grafo) com
@@ -100,8 +97,8 @@ fundamentado $\rightarrow$ interface.
         \texttt{CREATED}, \texttt{ACTED\_IN}, \texttt{HAS\_GENRE}, \texttt{PRODUCED\_BY},
         \texttt{HAS\_CHUNK}, \texttt{MENTIONS} e \texttt{RELATED\_TO}.
         % TODO(Pessoa 2): NER/RE final e ligação Document--Movie/Series.
-  \item \textbf{Recuperação:} índice vetorial (cosseno, 384 dimensões), índice de texto completo e
-        pontuação por caminho mais curto, combinados em um escore híbrido.
+  \item \textbf{Recuperação:} índice vetorial de embeddings MiniLM (cosseno, 384 dimensões), índice de texto completo e
+        pontuação por correspondência com caminhos recuperados via Cypher, combinados em um escore híbrido.
         % TODO(Pessoas 1 e 3): embeddings semânticos, geração de Cypher por LLM e multi-hop real.
   \item \textbf{Geração:} LLM local (Ollama) com as evidências como único contexto; sem Ollama,
         resposta por \emph{template}.
@@ -110,7 +107,7 @@ fundamentado $\rightarrow$ interface.
 \section{Metodologia de Avaliação}
 
 \subsection{Conjunto de perguntas}
-São 17 perguntas em cinco categorias: 1 salto (3), 2 saltos (6), 3 saltos (2), agregação (1) e
+São 17 perguntas em cinco categorias: 1 salto (3), 2 saltos (7), 3 saltos (2), agregação (1) e
 \emph{sem resposta no catálogo} (4). O gabarito de cada pergunta (entidades esperadas e documentos de
 suporte) é \textbf{calculado a partir de \texttt{titles.json}}, e não escrito à mão, o que evita
 inconsistência e permite regerar o conjunto se o catálogo crescer. As perguntas sem resposta
@@ -118,13 +115,7 @@ inconsistência e permite regerar o conjunto se o catálogo crescer. As pergunta
 do conjunto falha se o catálogo passar a conter a resposta, para que essas perguntas continuem válidas.
 
 \subsection{Variantes comparadas}
-\begin{enumerate}
-  \item \textbf{LLM sem recuperação:} o mesmo modelo recebe apenas a pergunta, com prompt neutro.
-  \item \textbf{RAG vetorial:} os 5 documentos mais próximos pelo índice vetorial viram contexto.
-  \item \textbf{GraphRAG híbrido:} contexto da recuperação híbrida com caminho no grafo.
-  \item \textbf{LLM externo sem recuperação} (opcional): respostas fornecidas por arquivo.
-\end{enumerate}
-O modelo gerador e o prompt de fundamentação são idênticos nas variantes 2 e 3; apenas o contexto muda.
+Executamos as duas variantes com o Qwen2.5 3B via Ollama, com temperatura zero. Na primeira, o modelo recebeu a pergunta e uma instrução para indicar quando faltassem informações. Na segunda, recebeu também evidências recuperadas pelo GraphRAG e instruções para fundamentar a resposta e citar os documentos utilizados.
 
 \subsection{Métricas}
 \begin{itemize}
@@ -140,41 +131,35 @@ A alucinação é medida em relação ao \emph{catálogo}, não ao mundo real: u
 do catálogo conta como não fundamentada. A detecção de entidades é heurística (nomes próprios com
 inicial maiúscula) e subestima casos em que uma palavra única inicia a frase.
 
-\section{Resultados}
+\section{Resultados e testes}
+\subsection{Comparação nas 17 perguntas}
+A recuperação híbrida elevou o número de acertos de três para 13. A proporção de respostas classificadas com alucinação caiu de 64,7\% para 11,8\%, diferença de 52,9 pontos percentuais (Tabela~\ref{tab:geral}). O recall médio considera as 13 perguntas com resposta no catálogo.
 
-% TODO: rodar `python -m scripts.evaluate_hallucination` com o pipeline final e colar a tabela.
-\begin{table}[ht]
-\centering
-\caption{Resultados gerais (preencher após a execução final).}
+\begin{table}[htbp]\centering
+\caption{Resultados da avaliação automática no catálogo de nove títulos.}
 \label{tab:geral}
-\begin{tabular}{lrrrr}
-\toprule
-Variante & Acerto & Recall médio & Alucinação & Abstenção correta \\
-\midrule
-LLM sem recuperação & -- & -- & -- & -- \\
-RAG vetorial        & -- & -- & -- & -- \\
-GraphRAG híbrido    & -- & -- & -- & -- \\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{tabular}{lrr}\toprule
+Métrica & Sem recuperação & GraphRAG \\ \midrule
+Respostas corretas & 3/17 & 13/17 \\
+Respostas com alucinação & 11/17 & 2/17 \\
+Recall médio das entidades & 32,7\% & 86,5\% \\
+Abstenções corretas & 0/4 & 4/4 \\ \bottomrule
+\end{tabular}\end{table}
 
-% TODO: tabela por categoria (1, 2 e 3 saltos, agregação, sem resposta) e análise de erros.
+Nas perguntas de dois saltos, o GraphRAG acertou seis das sete, enquanto o modelo sem recuperação acertou uma. Nas de um salto, ambos acertaram duas de três. Nas de três saltos, o GraphRAG acertou uma de duas e o modelo sem recuperação errou ambas. Nenhuma variante acertou a pergunta de agregação sobre atores presentes em mais de um título. O GraphRAG recuperou metade das entidades esperadas nessa pergunta. Nas quatro perguntas sem resposta no catálogo, apenas o GraphRAG se absteve corretamente em todos os casos.
+
+\subsection{Testes operacionais e rastreabilidade}
+O teste automatizado passou contra uma instância real do Neo4j. O teste verificou os índices de nomes de pessoas, títulos de filmes e vetores, as ligações entre entidades, títulos e documentos e uma travessia de dois saltos. Os nove trechos do catálogo tinham embeddings de 384 dimensões.
+
+No teste da interface Streamlit em modo de dados reais, perguntamos em quais filmes Keanu Reeves atuou e quem os dirigiu. O modelo gerou uma consulta Cypher parametrizada que percorreu as relações \texttt{ACTED\_IN} e \texttt{DIRECTED}. O sistema validou a consulta, executou-a no Neo4j e exibiu o código na interface. A busca retornou Chad Stahelski para \emph{John Wick} e Lana e Lilly Wachowski para \emph{The Matrix}.
+
+A extração sobre as sinopses produziu 35 menções e três relações. Em \emph{Inception}, a expressão \emph{recebe a missão de} ligou o sujeito \emph{Um ladrão especializado em invadir sonhos} ao complemento \emph{implantar uma ideia na mente de um herdeiro}. Uma consulta ao Neo4j confirmou que o trecho armazenado com a relação ocorre literalmente no documento de origem. O teste verificou a procedência dessa relação. Medir a cobertura da extração exigiria a anotação das sinopses por avaliadores.
 
 \section{Discussão e Limitações}
-
-Os resultados devem ser lidos com cautela. O catálogo tem apenas 9 títulos, de modo que o
-experimento demonstra o mecanismo, mas não permite conclusões estatísticas. Os embeddings usados são
-por \emph{hashing} determinístico e não capturam semântica, o que favorece a busca por termos exatos.
-O gerador é um modelo pequeno executado localmente, e a métrica automática depende de heurística de
-extração de entidades. Por fim, o baseline sem recuperação tem vantagem injusta de conhecimento
-paramétrico sobre os filmes reais, mas é penalizado por usar fatos fora do catálogo.
-% TODO: revisar esta seção com os números finais e as limitações vigentes dos demais módulos.
+A métrica automática identifica nomes sem suporte e respostas indevidas quando o catálogo não contém a informação solicitada. Uma associação incorreta entre nomes presentes no catálogo pode escapar à detecção. O experimento combina recuperação e instruções de fundamentação, de modo que não permite atribuir o ganho a um componente isolado. O tamanho do catálogo e o número reduzido de perguntas por categoria limitam a generalização dos resultados.
 
 \section{Conclusão}
-
-% TODO: conclusão após os resultados. Resumir (i) o que o grafo acrescentou em perguntas multi-hop,
-% (ii) o comportamento de abstenção, e (iii) trabalhos futuros (catálogo maior, embeddings
-% semânticos, citações e comunidades, avaliação humana ampliada).
+Neste catálogo, a recuperação híbrida aumentou a cobertura das entidades esperadas e reduziu a frequência de alucinações segundo o avaliador automático. As abstenções corretas e o ganho nas questões de dois saltos explicam nove dos dez acertos adicionais. A pergunta de agregação e uma das duas questões de três saltos continuaram sem solução correta.
 
 \bibliographystyle{sbc}
 \bibliography{Referencias/referencias}
